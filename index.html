@@ -121,7 +121,10 @@ textarea{min-height:70px;resize:vertical}
 .l{display:block;font-size:14px;color:var(--tx2);margin:14px 0 6px}
 .top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:6px;padding:10px 12px;background:var(--bg);border-bottom:1px solid var(--bd);min-height:56px}
 .top h1{font-size:18px;margin:0;flex:1;min-width:0;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#estado-cola{flex:none;font-size:13px}
+#estado-cola{flex:none;font-size:13px;padding:5px 10px;border-radius:999px;transition:background .3s,color .3s}#estado-cola.listo{animation:sync-ok .6s ease-out}
+@keyframes sync-ok{40%{transform:scale(1.08)}}@media (prefers-reduced-motion:reduce){#estado-cola.listo{animation:none}}
+.note.sync-ok{background:var(--okbg);color:var(--ok)}.note.sync-bl{background:var(--blbg);color:var(--bl)}.note.sync-wa{background:var(--wabg);color:var(--wa)}.note.sync-gr{background:var(--grbg);color:var(--gr)}.note.sync-er{background:var(--erbg);color:var(--er)}
+.note[class*=sync-] .i{width:16px;height:16px;vertical-align:-3px}.pend{margin:10px 0;border:1px solid var(--bd);border-radius:12px}.pend .row{justify-content:space-between;padding:9px 12px;gap:8px}.pend .row+.row{border-top:1px solid var(--bd)}.pend .i{width:15px;height:15px;vertical-align:-2px}
 .ib{border:0;background:transparent;font-size:22px;min-width:44px;min-height:44px;padding:6px 10px;border-radius:12px;cursor:pointer;line-height:1;color:var(--tx)}
 :focus-visible{outline:3px solid var(--foco);outline-offset:2px}
 [tabindex="-1"]:focus{outline:none}
@@ -181,6 +184,10 @@ h2{font-size:16px;margin:18px 0 8px;font-weight:700}
 .fila .tx{flex:1;min-width:0}.fila .tx div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .check{width:28px;height:28px;border-radius:50%;border:2px solid var(--bd2);flex:none;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800}
 .check.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.thumb.carga{animation:latido 1.2s ease-in-out infinite}@keyframes latido{50%{opacity:.45}}
+.visor{text-align:center}.visor-img{display:block;max-width:100%;max-height:70vh;margin:0 auto;border-radius:12px;object-fit:contain;transition:filter .25s}.visor-img.borrosa{filter:blur(6px)}
+.visor-carga{display:flex;flex-direction:column;align-items:center;gap:10px;padding:40px 12px;color:var(--tx2)}.visor-carga .i{width:34px;height:34px}
+@media (prefers-reduced-motion:reduce){.thumb.carga{animation:none}}
 .thumb{width:46px;height:46px;border-radius:10px;object-fit:cover;background:var(--grbg);flex:none}.thumb.vacia{display:flex;align-items:center;justify-content:center;color:var(--tx2)}.thumb.vacia .i{width:22px;height:22px;opacity:.75}
 .empty{text-align:center;color:var(--tx2);padding:26px 10px}
 .paso{font-size:13px;color:var(--tx2);margin:0}
@@ -232,7 +239,7 @@ table.t tfoot td{font-weight:700;background:var(--grbg);position:sticky;bottom:0
 </style>
 </head>
 <body>
-<div class="top"><h1 id="titulo">Alquileres</h1><span id="estado-cola" class="pill" style="display:none;cursor:pointer" role="status" aria-live="polite"></span><button class="ib" aria-label="Buscar alquileres" title="Buscar" onclick="ir('lista')"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg></button><button class="ib" id="btn-cerrar" aria-label="Cerrar ventana" style="display:none" onclick="cerrarVentana()"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg></button></div>
+<div class="top"><h1 id="titulo">Alquileres</h1><span id="estado-cola" class="pill sync" style="display:none;cursor:pointer" role="button" tabindex="0" aria-live="polite"></span><button class="ib" aria-label="Buscar alquileres" title="Buscar" onclick="ir('lista')"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg></button><button class="ib" id="btn-cerrar" aria-label="Cerrar ventana" style="display:none" onclick="cerrarVentana()"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg></button></div>
 <main id="main"><div class="empty">Cargando…</div></main>
 <div id="pie"></div>
 <nav class="nav" id="nav" aria-label="Secciones"></nav>
@@ -283,8 +290,85 @@ function fl(s) { if (!s) return ''; const x = aD(s); return DIAS_L[x.getDay()] +
 function cuando(s) { const n = dias(hoy(), s); return n === 0 ? 'hoy' : n === 1 ? 'mañana' : n === -1 ? 'ayer' : fc(s); }
 function esPC() { return window.matchMedia('(min-width:900px)').matches; }
 function driveId(url) { const m = /\/d\/([\w-]+)/.exec(url || ''); return m ? m[1] : ''; }
-function miniatura(url) { const id = driveId(url); return id ? `<img class="thumb" src="https:\/\/drive.google.com/thumbnail?id=${id}&sz=w300" onerror="this.style.visibility='hidden'" alt="Foto de la prenda" loading="lazy">` : `<div class="thumb vacia">${ic('vestido')}</div>`; }
-function verFoto(url, txt) { return url ? `<a href="${esc(url)}" target="_blank" rel="noopener" class="btn2 sm">${ic('foto')} ${esc(txt || 'Foto')}</a>` : ''; }
+// ─────────── Fotos ───────────
+// En la app de Google las miniaturas vienen directo de Drive. En la app instalada (y cuando Drive no responde,
+// como pasa en iPhone) se piden a Google con la llave de la tienda y quedan guardadas en el equipo: después se ven sin internet.
+const FOTOS_CACHE = 'fotos-imasumaq', VACIA = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP\/\/\/yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+S.fotoUrl = {}; S.fotoNo = {};
+const fotoEspera = {}, fotoPend = { m: [], g: [] };
+let fotoVuelo = 0;
+function fotoDelEquipo(k) {
+  if (!window.ES_APP || !window.caches) return Promise.resolve(null);
+  return caches.open(FOTOS_CACHE).then(c => c.match('./__foto/' + k)).then(r => r ? r.blob() : null).then(b => b ? URL.createObjectURL(b) : null).catch(() => null);
+}
+function guardarFotoEnEquipo(k, dataUrl) {
+  if (!window.ES_APP || !window.caches) return;
+  fetch(dataUrl).then(r => r.blob()).then(b => caches.open(FOTOS_CACHE).then(c => c.put('./__foto/' + k, new Response(b, { headers: { 'Content-Type': b.type || 'image/jpeg' } })))).catch(() => { });
+}
+function terminarFoto(k, url, err) {
+  const ls = fotoEspera[k] || []; delete fotoEspera[k];
+  if (url) S.fotoUrl[k] = url;
+  ls.forEach(f => url ? f[0](url) : f[1](err || new Error('No se encontró la foto.')));
+}
+function pedirFoto(id, mini) {
+  const k = (mini ? 'm:' : 'g:') + id;
+  if (S.fotoUrl[k]) return Promise.resolve(S.fotoUrl[k]);
+  const p = new Promise((ok, no) => { (fotoEspera[k] = fotoEspera[k] || []).push([ok, no]); });
+  if (fotoEspera[k].length === 1) fotoDelEquipo(k).then(u => {
+    if (u) { terminarFoto(k, u); return; }
+    // La completa primero (la pidió alguien), las miniaturas de a 8 y como mucho dos viajes a la vez.
+    (mini ? fotoPend.m : fotoPend.g).push(id); setTimeout(enviarFotos, 40);
+  });
+  return p;
+}
+function enviarFotos() {
+  let mini = false, ids = fotoPend.g.splice(0, 1);
+  if (!ids.length) { if (fotoVuelo >= 2) return; mini = true; ids = fotoPend.m.splice(0, 8); }
+  if (!ids.length) return;
+  fotoVuelo++;
+  llamar('fotos', ids, mini).then(r => {
+    r = r || {};
+    ids.forEach(id => { const k = (mini ? 'm:' : 'g:') + id; if (r[id]) { guardarFotoEnEquipo(k, r[id]); terminarFoto(k, r[id]); } else { S.fotoNo[k] = 1; terminarFoto(k, null); } });
+  }, e => { ids.forEach(id => terminarFoto((mini ? 'm:' : 'g:') + id, null, e)); })
+    .finally(() => { fotoVuelo--; if (fotoPend.g.length || fotoPend.m.length) enviarFotos(); });
+}
+function cargarMini(img) {
+  const id = img.dataset.fid;
+  if (!id || S.fotoNo['m:' + id]) return;
+  img.classList.add('carga');
+  pedirFoto(id, true).then(u => { img.src = u; img.classList.remove('carga'); }, () => img.classList.remove('carga'));
+}
+const obsFotos = window.IntersectionObserver ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { obsFotos.unobserve(e.target); cargarMini(e.target); } }), { rootMargin: '300px' }) : null;
+function vigilarFotos() { document.querySelectorAll('img[data-fid]:not([data-v])').forEach(img => { img.dataset.v = '1'; if (obsFotos) obsFotos.observe(img); else cargarMini(img); }); }
+new MutationObserver(() => { clearTimeout(S._tFotos); S._tFotos = setTimeout(vigilarFotos, 30); }).observe(document.body, { childList: true, subtree: true });
+function fotoPorGoogle(img, id) { img.onerror = null; img.src = VACIA; img.dataset.fid = id; vigilarFotos(); }
+function miniatura(url) {
+  const id = driveId(url);
+  if (!id) return `<div class="thumb vacia">${ic('vestido')}</div>`;
+  const listo = S.fotoUrl['m:' + id] || S.fotoUrl['g:' + id];
+  if (listo) return `<img class="thumb" src="${listo}" alt="Foto de la prenda">`;
+  if (window.ES_APP) return `<img class="thumb" src="${VACIA}" data-fid="${id}" alt="Foto de la prenda">`;
+  return `<img class="thumb" src="https:\/\/drive.google.com/thumbnail?id=${id}&sz=w300" onerror="fotoPorGoogle(this,'${id}')" alt="Foto de la prenda" loading="lazy">`;
+}
+function verFoto(url, txt) {
+  if (!url) return '';
+  const id = driveId(url);
+  if (window.ES_APP && id) return `<button type="button" class="btn2 sm" onclick="event.stopPropagation();abrirFoto('${id}')">${ic('foto')} ${esc(txt || 'Foto')}</button>`;
+  return `<a href="${esc(url)}" target="_blank" rel="noopener" class="btn2 sm" onclick="event.stopPropagation()">${ic('foto')} ${esc(txt || 'Foto')}</a>`;
+}
+function abrirFoto(id) {
+  const mini = S.fotoUrl['m:' + id];
+  modal(`<div class="visor">${mini ? `<img id="visor-img" class="visor-img borrosa" src="${mini}" alt="Foto">` : `<div id="visor-img" class="visor-carga">${ic('foto')}<div>Cargando foto…</div></div>`}
+    <button class="btn2 w" style="margin-top:10px" onclick="cerrarModal()">Cerrar</button></div>`);
+  pedirFoto(id, false).then(u => {
+    const el = $('visor-img'); if (!el) return;
+    el.outerHTML = `<img id="visor-img" class="visor-img" src="${u}" alt="Foto">`;
+  }, e => {
+    const el = $('visor-img'); if (!el) return;
+    const sinRed = navigator.onLine === false || /network|conexi|fetch|load failed/i.test(String(e && e.message || e));
+    el.outerHTML = `<div id="visor-img" class="visor-carga">${ic('alerta')}<div>${sinRed ? 'Para ver esta foto la primera vez se necesita internet. Después queda guardada en este equipo.' : 'No se pudo abrir la foto.'}</div></div>`;
+  });
+}
 // Validaciones de datos de la clienta (Perú). Devuelven el mensaje de error o '' si está bien.
 function errDni(v) {
   const d = String(v || '').trim().replace(/\s/g, ''); if (!d) return '';
@@ -349,7 +433,7 @@ function guardar(fn, args, okMsg, despues) {
   if (S._ultFirma === firma && Date.now() - S._ultT < 2000) return null;
   S._ultFirma = firma; S._ultT = Date.now();
   args = sinTmp(args);
-  const t = { op: uidLocal('OP'), fn, args: JSON.parse(JSON.stringify(args)), desc: DESC[fn] || fn, intentos: 0, error: '' };
+  const t = { op: uidLocal('OP'), fn, args: JSON.parse(JSON.stringify(args)), desc: DESC[fn] || fn, intentos: 0, error: '', t: Date.now() };
   if (CREA_TMP[fn]) {
     const ex = fn === 'guardarPrenda' ? (args[0].existente ? args[0].id : '') : fn === 'guardarClienta' ? args[0].id : '';
     t.tmp = ex || uidLocal(CREA_TMP[fn]);
@@ -395,8 +479,8 @@ async function procesarCola() {
         const t = S.cola.shift();
         if (t && t.tmp && res.id && res.id !== t.tmp) cambiarIdTmp(t.tmp, res.id);
       }
-      persistirCola();
-      S.colaEstado = fallo ? '' : 'ok';
+      persistirCola(); marcarSync();
+      S.colaEstado = '';
       if (r && r.datos) { setDatos(r.datos, true); S.cola.forEach(x => { try { aplicarLocal(x); } catch (e) { } }); reindexar(); }
       refrescarVistaSiSePuede();
       if (fallo) { pintarEstadoCola(); mostrarErrorCola(); break; }
@@ -429,15 +513,55 @@ function refrescarVistaSiSePuede() {
 
 function pendientesDe(id) { return S.cola.some(t => JSON.stringify(t.args).indexOf('"' + id + '"') >= 0); }
 
+// ─────────── Aviso de guardado (siempre visible arriba) ───────────
+S.ultSync = (function () { try { return Number(localStorage.getItem('alq_ult_sync')) || 0; } catch (e) { return 0; } })();
+S.sinRed = false;
+function marcarSync() { S.ultSync = Date.now(); S.sinRed = false; try { localStorage.setItem('alq_ult_sync', String(S.ultSync)); } catch (e) { } pintarEstadoCola(); }
+function esErrorDeRed(e) { return navigator.onLine === false || /networkerror|failed to fetch|http 0|sin conexi[oó]n|load failed|abort/i.test(String(e && e.message || e)); }
+function estadoSync() {
+  const n = S.cola.length, sinRed = S.colaEstado === 'offline' || S.sinRed || navigator.onLine === false;
+  if (S.cola.some(t => t.error)) return { k: 'err', txt: 'Revisar', ic: 'alerta', cls: 'p-Atrasado' };
+  if (n && sinRed) return { k: 'espera', txt: n + ' por enviar', ic: 'senal', cls: 'p-Reservado' };
+  if (n) return { k: 'envia', txt: 'Enviando' + (n > 1 ? ' ' + n : '') + '…', ic: 'reloj', cls: 'p-Entregado' };
+  if (sinRed) return { k: 'sinred', txt: 'Sin internet', ic: 'senal', cls: 'p-Anulado' };
+  return { k: 'ok', txt: 'Al día', ic: 'check', cls: 'p-Devuelto' };
+}
 function pintarEstadoCola() {
   const el = $('estado-cola'); if (!el) return;
-  const n = S.cola.length, err = S.cola.find(t => t.error);
-  if (err) { el.innerHTML = ic('alerta') + ' Revisar'; el.className = 'pill p-Atrasado'; el.style.display = ''; el.onclick = mostrarErrorCola; return; }
-  if (n && S.colaEstado === 'offline') { el.innerHTML = ic('senal') + ' Sin señal (' + n + ')'; el.className = 'pill p-Reservado'; el.style.display = ''; el.onclick = () => { S.colaEstado = ''; procesarCola(); }; return; }
-  if (n) { el.innerHTML = ic('reloj') + ' Guardando'; el.className = 'pill p-Entregado'; el.style.display = ''; el.onclick = null; return; }
-  if (S.colaEstado === 'ok') { el.innerHTML = ic('nube') + ' Guardado'; el.className = 'pill p-Devuelto'; el.style.display = ''; el.onclick = null;
-    clearTimeout(S._tOk); S._tOk = setTimeout(() => { if (!S.cola.length) { el.style.display = 'none'; S.colaEstado = ''; } }, 2500); return; }
-  el.style.display = 'none';
+  const e = estadoSync(), antes = el.dataset.k;
+  el.dataset.k = e.k; el.className = 'pill sync ' + e.cls + (antes && antes !== 'ok' && e.k === 'ok' ? ' listo' : '');
+  el.innerHTML = ic(e.ic) + ' ' + e.txt; el.style.display = '';
+  el.setAttribute('aria-label', 'Estado de guardado: ' + e.txt + '. Toca para ver el detalle.');
+  el.onclick = e.k === 'err' ? mostrarErrorCola : mostrarSync;
+  el.onkeydown = ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); el.onclick(); } };
+  if ($('m-sync')) $('m-sync').innerHTML = detalleSync();
+}
+function haceCuanto(ts) {
+  if (!ts) return '';
+  const m = Math.round((Date.now() - ts) / 60000);
+  const hora = new Date(ts).toLocaleTimeString('es-PE', { hour: 'numeric', minute: '2-digit' });
+  if (m < 1) return 'hace un momento';
+  if (m < 60) return 'hace ' + m + ' min (' + hora + ')';
+  return new Date(ts).toDateString() === new Date().toDateString() ? 'hoy ' + hora : new Date(ts).toLocaleDateString('es-PE', { day: 'numeric', month: 'short' }) + ' ' + hora;
+}
+function detalleSync() {
+  const e = estadoSync(), n = S.cola.length;
+  const frase = {
+    ok: ['ok', 'Todo está guardado en el Google Sheet.'],
+    envia: ['bl', 'Enviando al Google Sheet. Ya está guardado en este equipo, no se pierde.'],
+    espera: ['wa', 'Sin internet. Estos cambios están guardados en este equipo y se enviarán solos apenas vuelva la señal.'],
+    sinred: ['gr', 'Sin internet, pero no hay nada pendiente: todo lo tuyo ya está en el Google Sheet. Lo que hagan en otros equipos lo verás cuando vuelva la señal.']
+  }[e.k] || ['er', 'Hay un cambio que Google no aceptó.'];
+  const lista = n ? `<div class="pend">${S.cola.map(t => `<div class="row"><span>${ic(t.error ? 'alerta' : 'reloj')} ${esc(t.desc || 'Cambio')}</span><span class="mut">${esc(haceCuanto(t.t))}</span></div>`).join('')}</div>` : '';
+  return `<div class="note sync-${frase[0]}">${ic(e.ic)} <b>${esc(e.txt)}.</b> ${esc(frase[1])}</div>${lista}
+    <p class="mut">Última conexión con Google: ${S.ultSync ? esc(haceCuanto(S.ultSync)) : 'todavía ninguna en este equipo'}</p>
+    ${n ? '<p class="mut">Mientras haya cambios por enviar, no borres la app ni los datos del navegador.</p>' : ''}`;
+}
+function mostrarSync() {
+  const n = S.cola.length;
+  window._syncYa = () => { S.colaEstado = ''; S.sinRed = false; clearTimeout(colaTimer); cerrarModal(); if (S.cola.length) procesarCola(); else { toast('Actualizando…'); refrescarSiToca(); } };
+  modal(`<h2 style="margin-top:0;font-size:20px">Estado de guardado</h2><div id="m-sync">${detalleSync()}</div>
+    <div class="g2" style="margin-top:12px"><button class="btn2 w" onclick="cerrarModal()">Cerrar</button><button class="btn" onclick="_syncYa()">${n ? 'Enviar ahora' : 'Actualizar ahora'}</button></div>`);
 }
 
 function mostrarErrorCola() {
@@ -1551,12 +1675,12 @@ async function refrescar() {
   try {
     const d = await llamar('getDatos');
     if (S.ocupado) return;
-    setDatos(d);
+    setDatos(d); marcarSync();
     const enForm = !!S.form || !!S.edit || $('capa').innerHTML;
     const escribiendo = document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
     if (!enForm && !escribiendo) { const y = window.scrollY; render(); window.scrollTo(0, y); }
     else if (!enForm && S.vista === 'lista') pintarResultados();
-  } catch (e) { }
+  } catch (e) { if (esErrorDeRed(e)) { S.sinRed = true; pintarEstadoCola(); } }
 }
 let tR;
 window.addEventListener('resize', () => { clearTimeout(tR); tR = setTimeout(() => { if (S.vista === 'lista') pintarResultados(); }, 200); });
@@ -1569,7 +1693,7 @@ const refrescarSiToca = () => { S.ultRefresco = Date.now(); refrescar(); };
   const dormida = Date.now() - S.ultToque >= 600000; S.ultToque = Date.now();
   if (dormida && Date.now() - S.ultRefresco > 45000) refrescarSiToca();
 }, { passive: true }));
-window.addEventListener('online', () => { S.colaEstado = ''; clearTimeout(colaTimer); if (S.cola.length) procesarCola(); else refrescarSiToca(); });
+window.addEventListener('online', () => { S.colaEstado = ''; S.sinRed = false; pintarEstadoCola(); clearTimeout(colaTimer); if (S.cola.length) procesarCola(); else refrescarSiToca(); });
 window.addEventListener('offline', () => { S.colaEstado = 'offline'; pintarEstadoCola(); });
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && Date.now() - S.ultRefresco > 15000) refrescarSiToca(); });
 setInterval(() => { if (activo()) refrescarSiToca(); }, 45000);
@@ -1603,11 +1727,11 @@ function vincularConLink() {
   let d0 = null;
   try { d0 = JSON.parse($('datos0').textContent); } catch (e) { d0 = null; }
   const conPendientes = () => { if (S.cola.length) { S.cola.forEach(x => { try { aplicarLocal(x); } catch (e) { } }); reindexar(); procesarCola(); } };
-  if (d0 && d0.alquileres) { setDatos(d0); conPendientes(); ir(VISTA0, null, true); return; }
+  if (d0 && d0.alquileres) { setDatos(d0); marcarSync(); conPendientes(); ir(VISTA0, null, true); return; }
   let local = null;
   try { local = JSON.parse(localStorage.getItem('alq_datos') || 'null'); } catch (e) { local = null; }
   if (local && local.alquileres) { setDatos(local); conPendientes(); ir(VISTA0, null, true); refrescar(); return; }
-  llamar('getDatos').then(d => { setDatos(d); conPendientes(); ir(VISTA0, null, true); }).catch(e => {
+  llamar('getDatos').then(d => { setDatos(d); marcarSync(); conPendientes(); ir(VISTA0, null, true); }).catch(e => {
     const m = String(e && e.message || e);
     const sinLlave = /CLAVE/.test(m);
     const txt = sinLlave && window.ES_APP ? 'Este equipo todavía no está vinculado con la tienda. Pega abajo el link de instalación (en la app de Google: Más → Ajustes → App sin internet → Copiar link).'
@@ -1618,6 +1742,7 @@ function vincularConLink() {
     $('main').innerHTML = `<div class="empty"><p>No se pudo cargar.</p><p class="mut">${esc(txt)}</p>${pegar}<button class="btn2" onclick="location.reload()">Reintentar</button></div>`;
   });
 })();
+pintarEstadoCola();
 </script>
 </body>
 </html>

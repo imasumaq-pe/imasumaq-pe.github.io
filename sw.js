@@ -1,12 +1,13 @@
-// Guarda la app en el equipo para que abra sin internet. Cada versión nueva reemplaza a la anterior.
-const V = 'imasumaq-aae8dc5284';
+// Guarda la app en el equipo para que abra sin internet. Cada versión nueva reemplaza a la anterior
+// (las fotos guardadas, en 'fotos-imasumaq', se conservan).
+const V = 'imasumaq-67c9ff3df2';
 const ARCHIVOS = ['./', './index.html', './manifest.webmanifest', './icono-192.png', './icono-512.png', './icono-mask.png'];
 self.addEventListener('install', e => {
   // cache: 'reload' = trae los archivos frescos del servidor (no la copia vieja del navegador)
   e.waitUntil(caches.open(V).then(c => c.addAll(ARCHIVOS.map(u => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== V).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== V && k.indexOf('imasumaq-') === 0).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
 self.addEventListener('fetch', e => {
   const u = new URL(e.request.url);
