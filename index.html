@@ -98,7 +98,7 @@ html[data-tema=salvia]{--bg:#F4F6F2;--card:#FFFFFF;--tx:#18201A;--tx2:#5C6A5F;--
 .resumen{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:2px 0 10px}
 .res{display:flex;flex-direction:column;align-items:flex-start;gap:2px;border:1px solid var(--bd);background:var(--card);border-radius:16px;padding:12px;min-height:44px;cursor:pointer;text-align:left;min-width:0}
 .res .i{width:22px;height:22px;color:var(--pri);margin-bottom:4px}
-.res b{font-size:20px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.res b{font-size:clamp(17px,4.6vw,20px);line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .res span{font-size:13px;color:var(--tx2);line-height:1.2}
 .i{width:1.25em;height:1.25em;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-.25em}
 .ib .i{width:24px;height:24px}
@@ -148,7 +148,8 @@ main{padding:14px 14px 100px;max-width:640px;margin:0 auto}
 .nav button{min-height:56px}.nav button.on{color:var(--pri);font-weight:700}
 body.foco .nav{display:none}
 .pie{position:fixed;left:0;right:0;bottom:0;z-index:7;background:var(--card);border-top:1px solid var(--bd);padding:10px 14px calc(10px + env(safe-area-inset-bottom));display:flex;gap:8px}
-.pie .btn{flex:1}.pie .btn2{flex:none}
+.pie .btn{flex:1}.pie .btn2{flex:none}.pie>div{max-width:612px;margin:0 auto}
+.nav{justify-content:center}.nav button{max-width:170px}
 .card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px;margin-bottom:10px}
 .row{display:flex;align-items:center;gap:8px}.sp{justify-content:space-between}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.g2>*{min-width:0}
@@ -186,7 +187,7 @@ h2{font-size:16px;margin:18px 0 8px;font-weight:700}
 .check.on{background:var(--ok);border-color:var(--ok);color:#fff}
 .btn2.solo-ic{display:inline-flex;align-items:center;justify-content:center;padding:0 10px;min-height:44px;min-width:44px;margin-left:6px;vertical-align:middle}.btn2.solo-ic .i{width:18px;height:18px;margin:0}
 .thumb.carga{animation:latido 1.2s ease-in-out infinite}@keyframes latido{50%{opacity:.45}}
-.visor{text-align:center}.visor-img{display:block;max-width:100%;max-height:70vh;margin:0 auto;border-radius:12px;object-fit:contain;transition:filter .25s}.visor-img.borrosa{filter:blur(6px)}
+.visor{text-align:center}.visor-img{display:block;max-width:100%;max-height:calc(70vh / var(--z,1));margin:0 auto;border-radius:12px;object-fit:contain;transition:filter .25s}.visor-img.borrosa{filter:blur(6px)}
 .visor-carga{display:flex;flex-direction:column;align-items:center;gap:10px;padding:40px 12px;color:var(--tx2)}.visor-carga .i{width:34px;height:34px}
 @media (prefers-reduced-motion:reduce){.thumb.carga{animation:none}}
 .thumb{width:46px;height:46px;border-radius:10px;object-fit:cover;background:var(--grbg);flex:none}.thumb.vacia{display:flex;align-items:center;justify-content:center;color:var(--tx2)}.thumb.vacia .i{width:22px;height:22px;opacity:.75}
@@ -195,20 +196,20 @@ h2{font-size:16px;margin:18px 0 8px;font-weight:700}
 .barra{height:6px;border-radius:3px;background:var(--bd);margin:6px 0 14px;overflow:hidden}.barra div{height:6px;background:var(--pri);border-radius:3px}
 .preg{font-size:22px;font-weight:800;margin:0 0 14px}
 .lst>div:first-child{border-top:0!important}
-.lista-scroll{max-height:calc(100vh - 360px);max-height:calc(100dvh - 360px);min-height:180px;overflow:auto;border:1px solid var(--bd);border-radius:14px;background:var(--card);padding:0 10px}
+.lista-scroll{max-height:calc(100vh / var(--z,1) - 360px);max-height:calc(100dvh / var(--z,1) - 360px);min-height:180px;overflow:auto;border:1px solid var(--bd);border-radius:14px;background:var(--card);padding:0 10px}
 main{overflow-x:hidden}
 .toast{position:fixed;left:50%;top:64px;transform:translateX(-50%);z-index:20;background:var(--pri);color:var(--onpri);padding:10px 16px;border-radius:14px;max-width:92%;font-size:15px;box-shadow:0 6px 24px rgba(0,0,0,.18);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:avisa .24s cubic-bezier(.23,1,.32,1)}
 .toast.er{white-space:normal}
 .toast.er{background:var(--er);color:#fff}
 .velo{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;animation:oscurece .2s ease-out}
-.modal{background:var(--card);width:100%;max-width:480px;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:92vh;max-height:92dvh;overflow:auto;overscroll-behavior:contain;animation:sube .34s cubic-bezier(.32,.72,0,1);box-shadow:0 -8px 30px rgba(0,0,0,.12)}
+.modal{background:var(--card);width:100%;max-width:480px;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:calc(92vh / var(--z,1));max-height:calc(92dvh / var(--z,1));overflow:auto;overscroll-behavior:contain;animation:sube .34s cubic-bezier(.32,.72,0,1);box-shadow:0 -8px 30px rgba(0,0,0,.12)}
 .opc{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:14px 6px;font-size:17px;border-bottom:1px solid var(--bd);cursor:pointer;text-align:left;color:var(--tx);text-decoration:none}
 .opc span{font-size:22px;width:30px;text-align:center}
 .carga{position:fixed;top:0;left:0;right:0;height:4px;z-index:40;background:var(--pri);animation:cg 1s infinite}
 .guardando{position:fixed;left:50%;top:70px;transform:translateX(-50%);z-index:41;background:var(--pri);color:var(--onpri);padding:10px 18px;border-radius:22px;font-weight:700;font-size:15px;box-shadow:0 4px 18px rgba(0,0,0,.2)}
 @keyframes cg{0%{opacity:.3}50%{opacity:1}100%{opacity:.3}}
 .ok-grande{text-align:center;margin:14px 0 0}.ok-grande svg{width:76px;height:76px;overflow:visible}.ok-grande circle{fill:var(--okbg);transform-box:fill-box;transform-origin:center;animation:pop .42s cubic-bezier(.34,1.56,.64,1)}.ok-grande path{fill:none;stroke:var(--ok);stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:traza .42s .14s cubic-bezier(.65,0,.35,1) forwards}
-.tabla-wrap{overflow:auto;background:var(--card);border:1px solid var(--bd);border-radius:12px;max-height:72vh}
+.tabla-wrap{overflow:auto;background:var(--card);border:1px solid var(--bd);border-radius:12px;max-height:calc(72vh / var(--z,1))}
 table.t{border-collapse:collapse;width:100%;font-size:14px}
 table.t th{position:sticky;top:0;background:var(--pri);color:var(--onpri);text-align:left;padding:9px;font-weight:600;white-space:nowrap}
 table.t td{padding:8px 9px;border-bottom:1px solid var(--bd);white-space:nowrap;max-width:260px;overflow:hidden;text-overflow:ellipsis}
@@ -218,24 +219,30 @@ table.t tfoot td{font-weight:700;background:var(--grbg);position:sticky;bottom:0
 .solo-pc{display:none!important}
 .link{color:var(--ac);text-decoration:underline;cursor:pointer;font-size:15px;background:none;border:0;padding:10px 0;min-height:44px}
 @media (min-width:900px){
- .nav{top:0;bottom:0;right:auto;width:200px;flex-direction:column;border-top:0;border-right:1px solid var(--bd);padding-top:70px}
+ .nav{top:0;bottom:0;right:auto;width:200px;flex-direction:column;justify-content:flex-start;border-top:0;border-right:1px solid var(--bd);padding-top:70px}
+ .nav button{max-width:none}
  .nav button{flex:none;text-align:left;padding:13px 20px;font-size:16px;display:flex;gap:10px;align-items:center}
  .nav button .i{display:inline;margin:0}
  body.foco .nav{display:flex}
  .top{padding-left:214px}
- main{margin-left:200px;max-width:1200px;padding:20px 28px 110px}
- main.estrecho{max-width:none;padding-left:max(28px,calc((100vw - 880px) / 2));padding-right:max(28px,calc((100vw - 880px) / 2))}
- main:not(.estrecho){max-width:none}
- body.ancho .pie>div{max-width:min(1040px,calc(100vw - 256px))}
- main.ancho{padding-left:max(28px,calc((100vw - 1240px) / 2));padding-right:max(28px,calc((100vw - 1240px) / 2))}
- .inicio{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:0 18px;align-items:start}
+ /* Contenido centrado a la derecha del menú, con un ancho cómodo según la pantalla (sin vw: funciona con la escala). */
+ main{margin-left:200px;max-width:none;padding:20px max(28px,calc((100% - 200px - 1080px) / 2)) 110px}
+ main.estrecho{padding-left:max(28px,calc((100% - 200px - 720px) / 2));padding-right:max(28px,calc((100% - 200px - 720px) / 2))}
+ main.ancho{padding-left:max(28px,calc((100% - 200px - 1080px) / 2));padding-right:max(28px,calc((100% - 200px - 1080px) / 2))}
+ body.ancho .pie>div{max-width:1080px}
+ .inicio{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 20px;align-items:start}
  .h-fecha{grid-column:1/-1}.h-acc,.inicio .resumen{grid-column:1}.h-hoy{grid-column:2;grid-row:2/span 2}
  .det{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:0 18px;align-items:start}
  .velo{align-items:center;padding:24px}.modal{border-radius:20px;animation:aparece .22s cubic-bezier(.23,1,.32,1);box-shadow:0 20px 60px rgba(0,0,0,.25)}
- .pie{left:200px}.pie>div{max-width:680px;margin:0 auto;display:flex;gap:8px;width:100%}
+ .pie{left:200px;padding-left:28px;padding-right:28px}.pie>div{max-width:720px;margin:0 auto;display:flex;gap:8px;width:100%}
  .solo-pc{display:inline-flex!important}
  .toast{top:72px}
- .lista-scroll{max-height:calc(100vh - 380px);max-height:calc(100dvh - 380px)}
+ .lista-scroll{max-height:calc(100vh / var(--z,1) - 380px);max-height:calc(100dvh / var(--z,1) - 380px)}
+}
+@media (min-width:1250px){
+ /* Pantalla ancha: prendas y clientas en dos columnas, para no tener el precio lejísimos del nombre */
+ #pres,#cres{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:28px}
+ #pres>.empty,#cres>.empty,#cres>.link,#cres>.mut{grid-column:1/-1}
 }
 </style>
 </head>
@@ -860,7 +867,7 @@ function verEjemploMsg() {
     items: [{ prenda: 'Vestido rojo largo', precio: 60, estado: 'Activa' }, { prenda: 'Zapatos dorados', precio: 30, estado: 'Activa' }] };
   const burbuja = t => `<div style="background:#E7FFDB;color:#111;border-radius:10px;padding:10px 12px;font-size:15px;line-height:1.45;text-align:left;box-shadow:0 1px 1px rgba(0,0,0,.12)">${formatoWa(t)}</div>`;
   modal(`<h2 style="margin-top:0;font-size:20px">Así le llega a la clienta</h2>
-    <div style="background:#EFE7DD;border-radius:12px;padding:12px;max-height:60vh;overflow:auto">
+    <div style="background:#EFE7DD;border-radius:12px;padding:12px;max-height:calc(60vh / var(--z,1));overflow:auto">
       <div class="mut" style="margin:0 0 6px;color:#555">Constancia al alquilar</div>${burbuja(armarMensaje(($('a-k') || {}).value || c.mensaje_constancia, v))}
       <div class="mut" style="margin:14px 0 6px;color:#555">Recordatorio (un día antes)</div>${burbuja(armarMensaje(($('a-w') || {}).value || c.mensaje_recordatorio, v))}</div>
     <button class="btn w" style="margin-top:14px" onclick="cerrarModal()">Listo</button>`);
@@ -1183,7 +1190,7 @@ function paso4() {
     <div class="l">¿Qué deja de garantía?</div>${chips(GARANTIAS, f.garantia, 'setGarantia')}
     ${faltaDni ? `<input inputmode="numeric" placeholder="Número de DNI" value="${esc(f.clientaId ? '' : f.nueva.dni)}" oninput="${f.clientaId ? 'F().dniExtra=this.value' : 'F().nueva.dni=this.value'}">` : ''}
     ${f.garantia !== 'Ninguna' ? botonFoto('fotoGarantia', f.garantia === 'DNI físico' ? 'Foto del DNI (opcional)' : 'Foto del documento (opcional)', f.fotoGarantia) : ''}
-    ${f.verObs ? `<label class="l">Nota</label><textarea oninput="F().obs=this.value" placeholder="Ej. evento el sábado">${esc(f.obs)}</textarea>` : `<button class="link" style="margin-top:12px" onclick="F().verObs=true;render()">＋ Agregar una nota</button>`}`;
+    ${f.verObs ? `<label class="l">Nota</label><textarea oninput="F().obs=this.value" placeholder="Ej. evento el sábado">${esc(f.obs)}</textarea>` : `<button class="link" style="margin-top:6px;display:block" onclick="F().verObs=true;render()">＋ Agregar una nota</button>`}`;
 }
 function guardarNuevo() {
   const f = F();
@@ -1783,6 +1790,14 @@ function vincularConLink() {
   });
 })();
 pintarEstadoCola();
+// En computadora, con ventana grande, todo se agranda un poco (como Ctrl +) para que no se vea diminuto ni vacío.
+function escalarPantalla() {
+  const w = innerWidth, h = innerHeight, pc = matchMedia('(pointer:fine)').matches;
+  const z = pc && w >= 1100 ? Math.max(1, Math.min(w / 1300, h / 780, 1.25)) : 1;
+  const r = document.documentElement.style, zz = z > 1.02 ? z.toFixed(3) : '';
+  r.zoom = zz; r.setProperty('--z', zz || '1');
+}
+escalarPantalla(); addEventListener('resize', () => { clearTimeout(S._tEsc); S._tEsc = setTimeout(escalarPantalla, 80); });
 </script>
 </body>
 </html>
