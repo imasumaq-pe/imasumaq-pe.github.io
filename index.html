@@ -225,7 +225,7 @@ table.t tfoot td{font-weight:700;background:var(--grbg);position:sticky;bottom:0
  .det{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:0 18px;align-items:start}
  .velo{align-items:center;padding:24px}.modal{border-radius:20px;animation:aparece .22s cubic-bezier(.23,1,.32,1);box-shadow:0 20px 60px rgba(0,0,0,.25)}
  .pie{left:200px}.pie>div{max-width:680px;margin:0 auto;display:flex;gap:8px;width:100%}
- .solo-pc{display:inline-flex!important}.solo-movil{display:none!important}
+ .solo-pc{display:inline-flex!important}
  .toast{top:72px}
  .lista-scroll{max-height:calc(100vh - 380px);max-height:calc(100dvh - 380px)}
 }
@@ -444,6 +444,14 @@ function mostrarErrorCola() {
   const t = S.cola.find(x => x.error); if (!t) return;
   window._reint = () => { t.error = ''; t.intentos = 0; persistirCola(); cerrarModal(); procesarCola(); };
   window._desc = () => { S.cola = S.cola.filter(x => x !== t); persistirCola(); cerrarModal(); toast('Cambio descartado. Actualizando…'); llamar('getDatos').then(d => { setDatos(d, true); S.cola.forEach(x => { try { aplicarLocal(x); } catch (e) { } }); reindexar(); render(); procesarCola(); }); };
+  if (/CLAVE/.test(t.error) && window.ES_APP) {
+    modal(`<h2 style="margin-top:0;font-size:20px">Este equipo necesita el link nuevo</h2>
+      <p>La llave de la tienda cambió. Tus cambios <b>siguen guardados aquí</b> (${S.cola.length}) y se enviarán apenas lo vincules.</p>
+      <label class="l" for="vk">Pega el link de instalación nuevo</label><textarea id="vk" rows="3" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Mantén presionado aquí y toca Pegar"></textarea>
+      <button class="btn" style="margin-top:10px" onclick="vincularConLink()">Vincular este equipo</button>
+      <button class="btn2 w" style="margin-top:8px" onclick="cerrarModal()">Ahora no</button>`);
+    return;
+  }
   modal(`<h2 style="margin-top:0;font-size:20px">No se pudo guardar: ${esc(t.desc)}</h2><div class="warn">${esc(t.error)}</div>
     <p class="mut">Lo demás que hagas queda en espera hasta resolver esto.</p>
     <div class="g2" style="margin-top:12px"><button class="btn2 w er" onclick="_desc()">Descartar este cambio</button><button class="btn" onclick="_reint()">Reintentar</button></div>`);
@@ -1489,7 +1497,11 @@ function vAjustes() {
     <label class="l">Recargo por cada día extra (S/ por prenda)</label><input id="a-r" inputmode="decimal" value="${esc(c.recargo_dia || 0)}" placeholder="0 = sin recargo">
     <div class="mut">El precio de cada prenda es el normal por ${esc(c.dias_alquiler)} días. Si se la lleva más días, se suma el recargo solo. Igual puedes cambiar el precio en cada alquiler. La mora se pone sola si devuelve desde el día siguiente a la fecha pactada.</div>
     <h2>App sin internet</h2>
-    ${window.ES_APP ? `<div class="note" style="background:var(--okbg);color:var(--ok)">${ic('check')} Estás en la app instalada: abre y funciona sin internet. Los cambios se envían al Sheet cuando vuelve la señal.</div>`
+    ${window.ES_APP ? `<div class="note" style="background:var(--okbg);color:var(--ok)">${ic('check')} Estás en la app instalada: abre y funciona sin internet. Los cambios se envían al Sheet cuando vuelve la señal.</div>
+    <details style="margin-top:10px"><summary class="link">Vincular con un link nuevo (si cambiaste la llave)</summary>
+      <textarea id="vk" rows="3" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Pega aquí el link de instalación" style="margin-top:8px"></textarea>
+      <button class="btn2 w" style="margin-top:8px" onclick="vincularConLink()">Vincular este equipo</button></details>
+    <button class="link" style="margin-top:10px;color:var(--er)" onclick="desvincularEquipo()">Desvincular y borrar los datos de este equipo</button>`
       : `<div class="mut">Instala la app en la tablet o el celular para que abra aunque no haya internet. Todo lo que registres se guarda en el equipo y pasa al Sheet cuando vuelve la señal.</div>
     <button class="btn2 w" style="margin-top:8px" onclick="instalarSinInternet()">${ic('descargar')} Instalar en una tablet o celular</button>`}
     <h2>Aviso diario por correo</h2>
@@ -1573,10 +1585,18 @@ try {
   });
 } catch (e) { }
 // Arranque rápido: 1) datos que vienen con la página, 2) copia guardada en el equipo, 3) servidor.
+function desvincularEquipo() {
+  if (S.cola.length) { toast('Hay ' + S.cola.length + ' cambio(s) sin enviar. Conéctate a internet y espera a que se guarden antes de desvincular.', true, 9000); return; }
+  confirmar('¿Desvincular este equipo?', 'Se borran de este equipo la llave y la copia de los datos (en el Google Sheet no se borra nada). Úsalo si vas a vender o prestar la tablet o el celular.', () => {
+    ['alq_clave', 'alq_datos', COLA_KEY].forEach(k => { try { localStorage.removeItem(k); } catch (e) { } });
+    try { caches.keys().then(ks => Promise.all(ks.map(k => caches.delete(k)))).finally(() => location.replace(location.pathname)); } catch (e) { location.replace(location.pathname); }
+  });
+}
 function vincularConLink() {
   const m = /k=([0-9a-f]{64})/.exec(($('vk').value || '').trim());
   if (!m) { toast('Ese no es el link de instalación completo. Cópialo otra vez desde Ajustes → App sin internet.', true, 8000); return; }
   try { localStorage.setItem('alq_clave', m[1]); } catch (e) { }
+  (S.cola || []).forEach(t => { if (/CLAVE/.test(t.error || '')) { t.error = ''; t.intentos = 0; } }); persistirCola();
   location.reload();
 }
 (function arrancar() {
