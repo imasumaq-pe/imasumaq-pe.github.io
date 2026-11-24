@@ -159,6 +159,8 @@ h2{font-size:16px;margin:18px 0 8px;font-weight:700}
 .note{background:var(--wabg);color:var(--wa);border-radius:12px;padding:10px 12px;font-size:15px;margin:8px 0}
 .fila{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--bd);cursor:pointer}
 .fila:last-child,.lst-pr>div:last-child{border-bottom:0!important}
+.pagos-t{margin-top:12px;padding-top:10px;border-top:1px solid var(--bd);font-size:13px;font-weight:600;color:var(--tx2)}.pago{padding:8px 0;border-top:1px solid var(--bd);gap:10px}.pagos-t+.pago{border-top:0}.pago.anulado,.pago.anulado .mut{color:var(--tx2)}.pago.anulado .monto{text-decoration:line-through}
+.toast .deshacer{margin-left:10px;background:none;border:0;color:inherit;font:inherit;font-weight:700;text-decoration:underline;padding:4px 2px;cursor:pointer}
 .fila.dis{cursor:default}.fila.dis>.b,.fila.dis .tx>.b{color:var(--tx2);font-weight:600}.fila.dis .check{border-style:dashed;background:var(--grbg)}
 .fila .tx{flex:1;min-width:0}.fila .tx div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .check{width:28px;height:28px;border-radius:50%;border:2px solid var(--bd2);flex:none;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800}
@@ -238,7 +240,7 @@ window.addEventListener('error', function (ev) {
 'use strict';
 const VISTA0 = (function (v) { return /^[a-zA-Z]+$/.test(v) ? v : 'inicio'; })('inicio');
 const EN_SHEET = '' === '1';
-const S = { d: null, ix: null, vista: 'inicio', param: null, filtro: 'Activos', q: '', mes: '', modo: 'alquiler', pf: 'Todas', pq: '', cq: '', form: null, ocupado: false, edit: null, pila: [], verPagos: false };
+const S = { d: null, ix: null, vista: 'inicio', param: null, filtro: 'Activos', q: '', mes: '', modo: 'alquiler', pf: 'Todas', pq: '', cq: '', form: null, ocupado: false, edit: null, pila: [] };
 const DIAS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
 const DIAS_L = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
 const TIPOS = ['Vestido', 'Zapatos', 'Accesorio', 'Otro'];
@@ -322,7 +324,7 @@ function persistirCola() {
 }
 function uidLocal(pre) { return pre + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 5).toUpperCase(); }
 const CREA_TMP = { crearAlquiler: 'T-', guardarPrenda: 'TP-', guardarClienta: 'TC-' };
-const DESC = { crearAlquiler: 'Alquiler nuevo', recibirDevolucion: 'Devolución', registrarPago: 'Pago', entregarAlquiler: 'Entrega', marcarGarantiaDevuelta: 'DNI devuelto',
+const DESC = { crearAlquiler: 'Alquiler nuevo', recibirDevolucion: 'Devolución', registrarPago: 'Pago', entregarAlquiler: 'Entrega', marcarGarantiaDevuelta: 'DNI devuelto / deshacer',
   anularAlquiler: 'Anulación', restaurarAlquiler: 'Restaurar alquiler', anularPago: 'Pago anulado/restaurado', guardarObservacion: 'Nota', cambiarFechas: 'Cambio de fechas',
   cambiarEstadoPrenda: 'Estado de prenda', guardarPrenda: 'Prenda', guardarClienta: 'Clienta', guardarConfig: 'Ajustes' };
 
@@ -479,7 +481,7 @@ const LOCAL = {
   },
   entregarAlquiler(args) { const a = S.d.alquileres.find(x => x.id === args[0]); if (!a) return; a.estado = 'Entregado'; a.entregadoEl = hoy();
     S.d.detalle.filter(d => d.alquilerId === a.id).forEach(d => { const pr = S.d.prendas.find(y => y.id === d.codigo); if (pr) pr.estado = 'Alquilada'; }); },
-  marcarGarantiaDevuelta(args) { const a = S.d.alquileres.find(x => x.id === args[0]); if (a) a.garantiaDevuelta = 'Sí'; },
+  marcarGarantiaDevuelta(args) { const a = S.d.alquileres.find(x => x.id === args[0]); if (a) a.garantiaDevuelta = args[1] ? 'No' : 'Sí'; },
   anularAlquiler(args) { const a = S.d.alquileres.find(x => x.id === args[0]); if (!a) return; const estaba = a.estado === 'Entregado'; a.estado = 'Anulado';
     a.obs = (a.obs ? a.obs + ' | ' : '') + 'Anulado ' + hoy() + (args[1] ? ': ' + args[1] : '');
     S.d.detalle.filter(d => d.alquilerId === a.id && d.estado === 'Activa').forEach(d => { d.estado = 'Anulada'; const pr = S.d.prendas.find(y => y.id === d.codigo); if (estaba && pr && pr.estado === 'Alquilada') pr.estado = 'Disponible'; }); },
@@ -521,6 +523,19 @@ function toast(msg, er, ms) {
   let t = $('toast'); if (!t) { t = document.createElement('div'); t.id = 'toast'; t.setAttribute('role', 'status'); t.setAttribute('aria-live', 'polite'); document.body.appendChild(t); }
   t.className = 'toast' + (er ? ' er' : ''); t.textContent = msg; t.style.display = 'block'; S._toastNuevo = true; setTimeout(() => { S._toastNuevo = false; }, 0);
   clearTimeout(tT); tT = setTimeout(() => { t.style.display = 'none'; }, ms || (er ? 6000 : 1800)); t.onclick = () => { t.style.display = 'none'; };
+}
+function toastDeshacer(msg, fnDeshacer) {
+  toast(msg, false, 8000);
+  const t = $('toast'); if (!t) return;
+  t.innerHTML = esc(msg) + ' <button class="deshacer" type="button">Deshacer</button>';
+  t.onclick = null;
+  t.querySelector('.deshacer').onclick = (e) => { e.stopPropagation(); t.style.display = 'none'; fnDeshacer(); };
+}
+function dniDevuelto(id, deshacer) {
+  const a = S.d.alquileres.find(x => x.id === id); const doc = a && a.garantia === 'DNI físico' ? 'DNI' : 'documento';
+  guardar('marcarGarantiaDevuelta', [id, !!deshacer], null);
+  if (deshacer) toast('Listo: el ' + doc + ' figura como que todavía lo tienes tú.');
+  else toastDeshacer(doc.charAt(0).toUpperCase() + doc.slice(1) + ' marcado como devuelto.', () => dniDevuelto(id, true));
 }
 function modal(html) { $('capa').innerHTML = `<div class="velo" onclick="if(event.target===this)cerrarModal()"><div class="modal" role="dialog" aria-modal="true" tabindex="-1">${html}</div></div>`; const f = $('capa').querySelector('input,select,textarea') || $('capa').querySelector('.modal'); if (f) f.focus({ preventScroll: true }); }
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('capa').innerHTML) cerrarModal(); });
@@ -680,7 +695,7 @@ function pintarNav() { const act = GRUPO[S.vista] || S.vista; $('nav').innerHTML
 function ir(v, p, reemplazar) {
   p = sinTmp(p);
   if (!reemplazar && S.d && (S.vista !== v || JSON.stringify(S.param) !== JSON.stringify(p == null ? null : p))) { S.pila.push({ v: S.vista, p: S.param }); if (S.pila.length > 40) S.pila.shift(); }
-  S.vista = v; S.param = p == null ? null : p; S.form = null; S.edit = null; S.verPagos = false; cerrarModal();
+  S.vista = v; S.param = p == null ? null : p; S.form = null; S.edit = null; cerrarModal();
   const tt = $('toast'); if (tt && !S._toastNuevo) tt.style.display = 'none'; S._toastNuevo = false;
   try { google.script.history[reemplazar ? 'replace' : 'push']({ v: v, p: S.param }, null, v); } catch (e) { }
   render(); window.scrollTo(0, 0);
@@ -1113,7 +1128,7 @@ function vListo() {
     filas.push(linea(pr.estado === 'Reparación' ? ['reparar', 'Reservado'] : ['vestido', 'Devuelto'], `<b>${esc(d.prenda)}</b><div class="mut">${pr.estado === 'Reparación' ? 'Pasó a reparación' + (d.desgaste > 0 ? ' · daño ' + money(d.desgaste) : '') : 'Quedó libre para alquilar'}</div>`));
   });
   noVinieron.forEach(d => filas.push(linea(['alerta', 'Atrasado'], `<b>${esc(d.prenda)}</b><div class="er-t">Todavía no la devuelve</div>`)));
-  if (P.t === 'pago') filas.push(linea(['cobrar', 'Devuelto'], `Pagó <b>${money(P.m)}</b>`));
+  if (P.t === 'pago') filas.push(linea(['cobrar', 'Devuelto'], `Pagó <b>${money(P.m)}</b><div><button class="link" style="padding:2px 0" onclick="ir('alquiler',${q(a.id)})">¿Te equivocaste? Anular este pago</button></div>`));
   filas.push(debe ? linea(['cobrar', 'Atrasado'], `Aún te debe <b>${money(a.saldo)}</b>`, 'er-t') : aFavor ? linea(['devolucion', 'Reservado'], `Le debes devolver <b>${money(-a.saldo)}</b>`) : linea(['check', 'Devuelto'], '<b>Pagó todo</b>', 'ok-t'));
   if (a.garantia && a.garantia !== 'Ninguna') filas.push(dni ? linea(['dni', 'Reservado'], `Todavía tienes su <b>${a.garantia === 'DNI físico' ? 'DNI' : 'documento'}</b>`) : linea(['dni', 'Devuelto'], `${a.garantia === 'DNI físico' ? 'DNI' : 'Documento'} devuelto`, 'ok-t'));
   const titulo = completo ? '¡Todo completo!' : P.t === 'dev' ? 'Devolución guardada' : 'Pago guardado';
@@ -1145,6 +1160,8 @@ function vAlquiler() {
     <div class="tot"><span>Devuelve</span><span class="b">${fl(a.pactada)}</span></div>
     ${a.devuelto ? `<div class="tot"><span>Devolvió</span><span class="b">${fl(a.devuelto)}</span></div>` : ''}
     <div class="tot"><span>Garantía</span><span>${esc(a.garantia === 'DNI físico' ? 'DNI' : a.garantia || 'Ninguna')} ${a.garantiaDevuelta === 'No' ? '<span class="pill p-Reservado">la tienes tú</span>' : a.garantiaDevuelta === 'Sí' ? '<span class="ok-t">devuelta ✓</span>' : ''}</span></div>
+    ${a.garantiaDevuelta === 'No' && a.estado !== 'Reservado' ? `<button class="btn2 sm w" style="margin-top:6px" onclick="dniDevuelto(${q(a.id)})">${ic('dni')} Ya le devolví su ${a.garantia === 'DNI físico' ? 'DNI' : 'documento'}</button>` : ''}
+    ${a.garantiaDevuelta === 'Sí' ? `<button class="link" style="margin-top:2px" onclick="confirmar('¿Todavía tienes su ${a.garantia === 'DNI físico' ? 'DNI' : 'documento'}?', 'Se marcará como que lo tienes tú, por si lo marcaste devuelto por error.', () => dniDevuelto(${q(a.id)}, true))">¿Lo marcaste por error? Deshacer</button>` : ''}
   </div>
   <div class="card lst-pr" style="padding:4px 14px">${ds.map(d => `<div style="padding:10px 0;border-bottom:1px solid var(--bd)"><div class="row sp"><span class="b">${esc(d.prenda)}</span><span>${money(d.precio)}</span></div>
     ${descPrenda(d.codigo) ? `<div class="mut">${esc(descPrenda(d.codigo))}</div>` : ''}
@@ -1158,10 +1175,10 @@ function vAlquiler() {
     <div class="tot"><span>Ya pagó</span><span class="ok-t">${money(a.pagado)}</span></div>
     ${a.estado === 'Anulado' ? `<div class="tot big"><span>Anulado</span><span class="mut">no se cobra</span></div>${a.garantiaDevuelta === 'No' ? '<div class="note">Si te dejó su documento, devuélveselo y márcalo en ⋯ Más.</div>' : ''}`
       : `<div class="tot big"><span>${a.saldo < -0.009 ? 'Le debes devolver' : a.saldo > 0.009 ? 'Le falta pagar' : 'Pagó todo'}</span><span class="${a.saldo > 0.009 ? 'er-t' : 'ok-t'}">${a.saldo > 0.009 || a.saldo < -0.009 ? money(Math.abs(a.saldo)) : '✓'}</span></div>`}
-    ${ps.length ? `<button class="link" onclick="S.verPagos=!S.verPagos;render()">${S.verPagos ? 'Ocultar pagos' : 'Ver pagos (' + ps.length + ')'}</button>` : ''}
-    ${S.verPagos ? ps.map(p => `<div class="row sp" style="padding:8px 0;border-top:1px solid var(--bd);${p.anulado === 'Sí' ? 'opacity:.5;text-decoration:line-through' : ''}">
-      <div><div>${esc(String(p.fecha).slice(8, 10) + '/' + String(p.fecha).slice(5, 7))} · ${esc(p.metodo)}</div><div class="mut">${esc(p.concepto)}</div></div>
-      <div class="row"><span class="b">${money(p.monto)}</span>${verFoto(p.voucher, '')}<button class="btn2 sm" style="text-decoration:none" onclick="confirmar(${q(p.anulado === 'Sí' ? '¿Restaurar este pago?' : '¿Anular este pago?')},'El saldo se recalcula. Se puede deshacer.',()=>guardar('anularPago',[${q(p.id)},${p.anulado === 'Sí'}],'Listo'))">${p.anulado === 'Sí' ? 'Restaurar' : 'Anular'}</button></div></div>`).join('') : ''}
+    ${ps.length ? `<div class="pagos-t">Pagos</div>` + ps.map(p => `<div class="row sp pago${p.anulado === 'Sí' ? ' anulado' : ''}">
+      <div><div>${esc(String(p.fecha).slice(8, 10) + '/' + String(p.fecha).slice(5, 7))} · ${esc(p.metodo)}${p.anulado === 'Sí' ? ' · <b>anulado</b>' : ''}</div><div class="mut">${esc(p.concepto)}</div></div>
+      <div class="row"><span class="b monto">${money(p.monto)}</span>${verFoto(p.voucher, '')}${/^TPG-/.test(p.id) ? '<span class="mut" style="font-size:13px">guardando…</span>'
+        : `<button class="btn2 sm" onclick="confirmar(${q(p.anulado === 'Sí' ? '¿Restaurar este pago de ' + money(p.monto) + '?' : '¿Anular este pago de ' + money(p.monto) + '?')},${q(p.anulado === 'Sí' ? 'Vuelve a contar como pagado y el saldo se recalcula.' : 'Úsalo si lo registraste por error: dejará de contar y volverá a figurar lo que debe. Se puede restaurar.')},()=>guardar('anularPago',[${q(p.id)},${p.anulado === 'Sí'}],${q(p.anulado === 'Sí' ? 'Pago restaurado' : 'Pago anulado: el saldo se recalculó')}))">${p.anulado === 'Sí' ? 'Restaurar' : 'Anular'}</button>`}</div></div>`).join('') : ''}
   </div>
   ${a.obs ? `<div class="card"><div class="mut">Nota</div><div style="white-space:pre-wrap">${esc(a.obs)}</div></div>` : ''}`;
 }
@@ -1193,7 +1210,8 @@ function opciones(id) {
   }
   if (a.estado !== 'Anulado') o.push(`<button class="opc" onclick="ir('pago',${q(a.id)})">${ic('cobrar')}Registrar un pago</button>`);
   if (a.estado === 'Reservado' || a.estado === 'Entregado') o.push(`<button class="opc" onclick="cerrarModal();S.edit='fechas';render();window.scrollTo(0,0)">${ic('calendario')}Cambiar fechas</button>`);
-  if (a.garantiaDevuelta === 'No') o.push(`<button class="opc" onclick="cerrarModal();guardar('marcarGarantiaDevuelta',[${q(a.id)}],'DNI marcado como devuelto')">${ic('dni')}Ya le devolví su ${esc(a.garantia === 'DNI físico' ? 'DNI' : 'documento')}</button>`);
+  if (a.garantiaDevuelta === 'No') o.push(`<button class="opc" onclick="cerrarModal();dniDevuelto(${q(a.id)})">${ic('dni')}Ya le devolví su ${esc(a.garantia === 'DNI físico' ? 'DNI' : 'documento')}</button>`);
+  if (a.garantiaDevuelta === 'Sí') o.push(`<button class="opc" onclick="cerrarModal();dniDevuelto(${q(a.id)}, true)">${ic('dni')}Todavía tengo su ${esc(a.garantia === 'DNI físico' ? 'DNI' : 'documento')} (deshacer)</button>`);
   o.push(`<button class="opc" onclick="nota(${q(a.id)})">${ic('nota')}${a.obs ? 'Editar nota' : 'Escribir una nota'}</button>`);
   o.push(`<button class="opc" onclick="ir('clienta',${q(a.clientaId)})">${ic('persona')}Ver a ${esc(nombre1(a.clienta))}</button>`);
   if (a.estado === 'Anulado') o.push(`<button class="opc" onclick="cerrarModal();restaurarUI(${q(a.id)})">${ic('restaurar')}Restaurar alquiler</button>`);

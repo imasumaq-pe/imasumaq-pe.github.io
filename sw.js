@@ -1,5 +1,5 @@
 // Guarda la app en el equipo para que abra sin internet. Cada versión nueva reemplaza a la anterior.
-const V = 'imasumaq-1301c97acb';
+const V = 'imasumaq-3f4c8d6a9a';
 const ARCHIVOS = ['./', './index.html', './manifest.webmanifest', './icono-192.png', './icono-512.png', './icono-mask.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(V).then(c => c.addAll(ARCHIVOS)).then(() => self.skipWaiting()));
