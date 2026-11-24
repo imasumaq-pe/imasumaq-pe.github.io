@@ -184,6 +184,7 @@ h2{font-size:16px;margin:18px 0 8px;font-weight:700}
 .fila .tx{flex:1;min-width:0}.fila .tx div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .check{width:28px;height:28px;border-radius:50%;border:2px solid var(--bd2);flex:none;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800}
 .check.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn2.solo-ic{display:inline-flex;align-items:center;justify-content:center;padding:0 10px;min-height:44px;min-width:44px;margin-left:6px;vertical-align:middle}.btn2.solo-ic .i{width:18px;height:18px;margin:0}
 .thumb.carga{animation:latido 1.2s ease-in-out infinite}@keyframes latido{50%{opacity:.45}}
 .visor{text-align:center}.visor-img{display:block;max-width:100%;max-height:70vh;margin:0 auto;border-radius:12px;object-fit:contain;transition:filter .25s}.visor-img.borrosa{filter:blur(6px)}
 .visor-carga{display:flex;flex-direction:column;align-items:center;gap:10px;padding:40px 12px;color:var(--tx2)}.visor-carga .i{width:34px;height:34px}
@@ -352,6 +353,7 @@ function miniatura(url) {
 }
 function verFoto(url, txt) {
   if (!url) return '';
+  if (url === 'pendiente') return '<span class="mut" style="font-size:13px">foto guardando…</span>';
   const id = driveId(url);
   if (window.ES_APP && id) return `<button type="button" class="btn2 sm" onclick="event.stopPropagation();abrirFoto('${id}')">${ic('foto')} ${esc(txt || 'Foto')}</button>`;
   return `<a href="${esc(url)}" target="_blank" rel="noopener" class="btn2 sm" onclick="event.stopPropagation()">${ic('foto')} ${esc(txt || 'Foto')}</a>`;
@@ -425,7 +427,7 @@ function persistirCola() {
 function uidLocal(pre) { return pre + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 5).toUpperCase(); }
 const CREA_TMP = { crearAlquiler: 'T-', guardarPrenda: 'TP-', guardarClienta: 'TC-' };
 const DESC = { crearAlquiler: 'Alquiler nuevo', recibirDevolucion: 'Devolución', registrarPago: 'Pago', entregarAlquiler: 'Entrega', marcarGarantiaDevuelta: 'DNI devuelto / deshacer',
-  anularAlquiler: 'Anulación', restaurarAlquiler: 'Restaurar alquiler', anularPago: 'Pago anulado/restaurado', guardarObservacion: 'Nota', cambiarFechas: 'Cambio de fechas',
+  anularAlquiler: 'Anulación', restaurarAlquiler: 'Restaurar alquiler', anularPago: 'Pago anulado/restaurado', adjuntarFoto: 'Foto', guardarObservacion: 'Nota', cambiarFechas: 'Cambio de fechas',
   cambiarEstadoPrenda: 'Estado de prenda', guardarPrenda: 'Prenda', guardarClienta: 'Clienta', guardarConfig: 'Ajustes' };
 
 function guardar(fn, args, okMsg, despues) {
@@ -597,6 +599,10 @@ function pagoLocal(a, p, concepto) {
   S.d.pagos.push({ id: uidLocal('TPG-'), fecha: ahoraStr(), alquilerId: a.id, clienta: a.clienta, monto: r2(p.monto), metodo: p.metodo || 'Efectivo', concepto: p.concepto || concepto, voucher: '', anulado: 'No', notas: p.notas || '' });
 }
 const LOCAL = {
+  adjuntarFoto(args) {
+    const o = args[0] === 'voucher' ? (S.d.pagos.find(p => p.id === args[1]) || {}) : (S.ix.alq[args[1]] || {});
+    o[args[0] === 'voucher' ? 'voucher' : 'fotoGarantia'] = 'pendiente';
+  },
   crearAlquiler(args, t) {
     const p = args[0], id = t.tmp, h = hoy();
     let cli = p.clientaId ? S.d.clientas.find(c => c.id === p.clientaId) : null;
@@ -608,7 +614,7 @@ const LOCAL = {
     if (cli.estado === 'Eliminada') cli.estado = '';
     const a = { id, registrado: ahoraStr(), clienta: cli.nombre, dni: cli.dni || '', telefono: cli.telefono || '', prendas: '', salida: p.salida, pactada: p.pactada,
       entregadoEl: p.entregarAhora ? h : '', devuelto: '', estado: p.entregarAhora ? 'Entregado' : 'Reservado', garantia: p.garantia, garantiaDetalle: p.garantiaDetalle || '',
-      garantiaDevuelta: p.garantia === 'Ninguna' ? '' : 'No', subtotal: 0, mora: 0, desgaste: 0, total: 0, pagado: 0, saldo: 0, obs: p.obs || '', clientaId: cli.id };
+      garantiaDevuelta: p.garantia === 'Ninguna' ? '' : 'No', fotoGarantia: p.fotoGarantia ? 'pendiente' : '', subtotal: 0, mora: 0, desgaste: 0, total: 0, pagado: 0, saldo: 0, obs: p.obs || '', clientaId: cli.id };
     S.d.alquileres.push(a);
     p.prendas.forEach((it, i) => {
       let pr = S.d.prendas.find(x => x.id === it.codigo);
@@ -715,6 +721,15 @@ function leerFoto(file) {
 function botonFoto(ruta, txt, tiene) {
   return `<label class="btn2 sm" style="margin-top:8px"><input type="file" accept="${'image/' + '*'}" style="display:none" onchange="tomarFoto(this,${q(ruta)})">${ic('camara')} ${esc(txt || 'Foto')}</label> <span class="ok-t" style="font-size:14px" id="fl-${esc(ruta)}">${tiene ? '✓ lista' : ''}</span>`;
 }
+// Botón chico (solo el ícono de cámara) para agregar una foto a algo ya guardado: voucher o DNI.
+function fotoDespues(tipo, id, txt) {
+  return `<label class="btn2 sm solo-ic" title="${esc(txt)}" aria-label="${esc(txt)}" onclick="event.stopPropagation()"><input type="file" accept="${'image/' + '*'}" style="display:none" onchange="adjuntarFotoUI(this,${q(tipo)},${q(id)})">${ic('camara')}</label>`;
+}
+async function adjuntarFotoUI(inp, tipo, id) {
+  const f = inp.files && inp.files[0]; if (!f) return;
+  try { const data = await leerFoto(f); guardar('adjuntarFoto', [tipo, id, data], tipo === 'voucher' ? '✅ Foto del voucher guardada' : '✅ Foto de la garantía guardada'); }
+  catch (e) { toast(e.message, true); }
+}
 async function tomarFoto(inp, ruta) {
   const f = inp.files && inp.files[0]; if (!f) return;
   const lbl = $('fl-' + ruta); if (lbl) lbl.textContent = 'procesando…';
@@ -759,6 +774,16 @@ function conflictos(codigo, salida, pactada, excluir) {
   return S.d.detalle.filter(d => String(d.codigo) === String(codigo) && d.estado === 'Activa' && d.alquilerId !== excluir)
     .map(d => S.ix.alq[d.alquilerId]).filter(a => a && (a.estado === 'Reservado' || a.estado === 'Entregado'))
     .filter(a => { let fin = a.pactada; if (a.estado === 'Entregado' && fin < h) fin = h; return salida <= fin && a.salida <= pactada; });
+}
+// Primer día en que la prenda está libre para un alquiler normal ('' si ya está libre desde hoy).
+function libreDesde(codigo) {
+  let d = hoy();
+  for (let n = 0; n < 60; n++) {
+    const cf = conflictos(codigo, d, sumar(d, cfg().dias_alquiler || 2), '');
+    if (!cf.length) return n ? d : '';
+    d = sumar(cf.reduce((m, a) => (a.pactada > m ? a.pactada : m), d), 1);
+  }
+  return '';
 }
 function conPrenda(codigo) {
   const act = S.d.detalle.filter(d => String(d.codigo) === String(codigo) && d.estado === 'Activa').map(d => S.ix.alq[d.alquilerId]).filter(a => a && (a.estado === 'Reservado' || a.estado === 'Entregado'));
@@ -954,7 +979,10 @@ function vElegir(destino) {
 function nuevoForm() {
   const h = hoy(), p = S.param || {};
   const f = { paso: 1, clientaId: p.clientaId || null, nueva: { nombre: '', dni: '', telefono: '' }, abrirNueva: false, qCli: '', salida: h, pactada: sumar(h, cfg().dias_alquiler || 2), otraSalida: false, otraVuelta: false,
-    items: [], qPre: '', entregar: true, adelantoModo: 'nada', adelantoOtro: '', metodo: 'Yape', voucher: null, garantia: 'DNI físico', obs: '', verObs: false };
+    items: [], qPre: '', entregar: true, adelantoModo: 'nada', adelantoOtro: '', metodo: 'Yape', voucher: null, garantia: 'DNI físico', fotoGarantia: null, obs: '', verObs: false };
+  if (p.prenda && S.ix.pre[p.prenda] && p.desde && p.desde > h) {
+    f.salida = p.desde; f.pactada = sumar(p.desde, cfg().dias_alquiler || 2); f.otraSalida = true; f.entregar = false;
+  }
   if (p.prenda && S.ix.pre[p.prenda]) f.items.push({ codigo: p.prenda, base: r2(S.ix.pre[p.prenda].precio), precio: r2(S.ix.pre[p.prenda].precio), obsSalida: '', foto: null });
   if (f.clientaId) f.paso = 2;
   return f;
@@ -1050,12 +1078,21 @@ function paso2() {
     <div class="card" style="margin-top:14px"><div class="b">Del ${fl(f.salida)} al ${fl(f.pactada)}</div><div class="mut">Mora desde el ${fl(sumar(f.pactada, 1))} si no devuelve.</div></div>`;
 }
 function setEntregar(v) { F().entregar = v === 'si'; render(); }
-function sig2() { const f = F(); if (f.pactada < f.salida) return toast('La devolución no puede ser antes de la salida.', true); f.paso = 3; render(); }
+function sig2() { const f = F(); if (f.pactada < f.salida) return toast('La devolución no puede ser antes de la salida.', true); f.avisoOcupadas = null; f.paso = 3; render(); }
 // Paso 3: prendas
+function quitarOcupadas() {
+  const f = F();
+  const fuera = f.items.filter(it => !it.nueva && conflictos(it.codigo, f.salida, f.pactada, '').length);
+  if (!fuera.length) return;
+  f.items = f.items.filter(it => fuera.indexOf(it) < 0);
+  f.avisoOcupadas = fuera.map(it => { const p = S.ix.pre[it.codigo] || {}, a = conflictos(it.codigo, f.salida, f.pactada, '')[0];
+    return (p.nombre || it.codigo) + (a.pactada < hoy() ? ' (' + nombre1(a.clienta) + ' todavía la tiene; debía devolverla el ' + fc(a.pactada) + ')' : ' (con ' + nombre1(a.clienta) + ' hasta el ' + fc(a.pactada) + ')'); });
+}
 function paso3() {
   const f = F();
-  const ocupadas = f.items.filter(it => !it.nueva && conflictos(it.codigo, f.salida, f.pactada, '').length);
-  return `${ocupadas.length ? `<div class="warn">${ocupadas.map(it => esc((S.ix.pre[it.codigo] || {}).nombre || '')).join(', ')} ya no está libre en esas fechas. Tócala en la lista para quitarla.</div>` : ''}
+  quitarOcupadas();
+  const av = f.avisoOcupadas || [];
+  return `${av.length ? `<div class="warn" id="av-ocup">${esc(av.join(', '))} ${av.length > 1 ? 'ya están alquiladas' : 'ya está alquilada'} en esas fechas, así que no la marqué. Elige otra prenda o vuelve y cambia las fechas.</div>` : ''}
     <div class="row" style="gap:8px"><input id="pq" class="buscar" placeholder="Buscar prenda" value="${esc(f.qPre)}" oninput="F().qPre=this.value;pintarPrendasPaso()" autocomplete="off" style="flex:1"><button class="btn2" onclick="prendaRapida()">＋ Nueva</button></div>
     <div class="mut" style="margin:8px 2px 0">Toca para marcar. Puedes marcar varias.</div>
     <div class="lista-scroll" style="margin-top:6px" id="pl">${listaPrendasPaso()}</div>`;
@@ -1077,6 +1114,8 @@ function listaPrendasPaso() {
 function pintarPrendasPaso() { const b = $('pl'); if (b) b.innerHTML = listaPrendasPaso(); }
 function toggleItem(codigo) {
   const f = F(), i = f.items.findIndex(x => x.codigo === codigo);
+  if (i < 0 && conflictos(codigo, f.salida, f.pactada, '').length) return toast('Esa prenda ya está alquilada en esas fechas.', true);
+  if (f.avisoOcupadas) { f.avisoOcupadas = null; const w = $('av-ocup'); if (w) w.remove(); }
   if (i >= 0) f.items.splice(i, 1); else { const it = { codigo, base: r2(S.ix.pre[codigo].precio), obsSalida: '', foto: null }; it.precio = precioSugerido(it); f.items.push(it); }
   // solo se repinta la lista (la prenda se queda en su sitio y no se pierde el lugar)
   const box = $('pl'), y = box ? box.scrollTop : 0, wy = window.scrollY;
@@ -1116,7 +1155,7 @@ function prendaRapida() {
 function sig3() {
   const f = F();
   if (!f.items.length) return toast('Elige al menos una prenda.', true);
-  if (f.items.some(i => conflictos(i.codigo, f.salida, f.pactada, '').length)) return toast('Hay una prenda que ya no está libre en esas fechas. Tócala en la lista para quitarla.', true);
+  if (f.items.some(i => !i.nueva && conflictos(i.codigo, f.salida, f.pactada, '').length)) { render(); return; }
   f.paso = 4; render();
 }
 // Paso 4: cobro y garantía
@@ -1143,6 +1182,7 @@ function paso4() {
     ${f.adelantoModo !== 'nada' ? `<div class="l">¿Cómo paga?</div>${chips(METODOS4, f.metodo, 'setMetodo')}${f.metodo !== 'Efectivo' ? botonFoto('voucher', 'Foto del voucher (opcional)', f.voucher) : ''}` : ''}
     <div class="l">¿Qué deja de garantía?</div>${chips(GARANTIAS, f.garantia, 'setGarantia')}
     ${faltaDni ? `<input inputmode="numeric" placeholder="Número de DNI" value="${esc(f.clientaId ? '' : f.nueva.dni)}" oninput="${f.clientaId ? 'F().dniExtra=this.value' : 'F().nueva.dni=this.value'}">` : ''}
+    ${f.garantia !== 'Ninguna' ? botonFoto('fotoGarantia', f.garantia === 'DNI físico' ? 'Foto del DNI (opcional)' : 'Foto del documento (opcional)', f.fotoGarantia) : ''}
     ${f.verObs ? `<label class="l">Nota</label><textarea oninput="F().obs=this.value" placeholder="Ej. evento el sábado">${esc(f.obs)}</textarea>` : `<button class="link" style="margin-top:12px" onclick="F().verObs=true;render()">＋ Agregar una nota</button>`}`;
 }
 function guardarNuevo() {
@@ -1161,7 +1201,7 @@ function guardarNuevo() {
   const p = {
     clientaId: f.clientaId, clienta: f.clientaId ? null : f.nueva, salida: f.salida, pactada: f.pactada,
     prendas: f.items.map(i => ({ codigo: i.codigo, nueva: i.nueva || null, precio: i.precio, obsSalida: i.obsSalida, foto: i.foto })),
-    garantia: f.garantia, garantiaDetalle: f.dniExtra ? 'DNI ' + f.dniExtra : '', entregarAhora: f.entregar && f.salida <= hoy(), obs: f.obs,
+    garantia: f.garantia, garantiaDetalle: f.dniExtra ? 'DNI ' + f.dniExtra : '', fotoGarantia: f.garantia !== 'Ninguna' ? f.fotoGarantia || null : null, entregarAhora: f.entregar && f.salida <= hoy(), obs: f.obs,
     adelanto: { monto: adelanto(), metodo: f.metodo, voucher: f.voucher, concepto: 'Adelanto' }
   };
   guardar('crearAlquiler', [p], null, r => ir('hecho', r.id, true));
@@ -1314,7 +1354,7 @@ function vAlquiler() {
     <div class="tot"><span>Sale</span><span class="b">${fl(a.salida)}</span></div>
     <div class="tot"><span>Devuelve</span><span class="b">${fl(a.pactada)}</span></div>
     ${a.devuelto ? `<div class="tot"><span>Devolvió</span><span class="b">${fl(a.devuelto)}</span></div>` : ''}
-    <div class="tot"><span>Garantía</span><span>${esc(a.garantia === 'DNI físico' ? 'DNI' : a.garantia || 'Ninguna')} ${a.garantiaDevuelta === 'No' ? '<span class="pill p-Reservado">la tienes tú</span>' : a.garantiaDevuelta === 'Sí' ? '<span class="ok-t">devuelta ✓</span>' : ''}</span></div>
+    <div class="tot"><span>Garantía</span><span>${esc(a.garantia === 'DNI físico' ? 'DNI' : a.garantia || 'Ninguna')} ${a.fotoGarantia ? verFoto(a.fotoGarantia, 'Ver') : a.garantia && a.garantia !== 'Ninguna' && a.estado !== 'Anulado' ? fotoDespues('garantia', a.id, a.garantia === 'DNI físico' ? 'Agregar foto del DNI' : 'Agregar foto del documento') : ''} ${a.garantiaDevuelta === 'No' ? '<span class="pill p-Reservado">la tienes tú</span>' : a.garantiaDevuelta === 'Sí' ? '<span class="ok-t">devuelta ✓</span>' : ''}</span></div>
     ${a.garantiaDevuelta === 'No' && a.estado !== 'Reservado' ? `<button class="btn2 sm w" style="margin-top:6px" onclick="dniDevuelto(${q(a.id)})">${ic('dni')} Ya le devolví su ${a.garantia === 'DNI físico' ? 'DNI' : 'documento'}</button>` : ''}
     ${a.garantiaDevuelta === 'Sí' ? `<button class="link" style="margin-top:2px" onclick="confirmar('¿Todavía tienes su ${a.garantia === 'DNI físico' ? 'DNI' : 'documento'}?', 'Se marcará como que lo tienes tú, por si lo marcaste devuelto por error.', () => dniDevuelto(${q(a.id)}, true))">¿Lo marcaste por error? Deshacer</button>` : ''}
   </div>
@@ -1332,7 +1372,7 @@ function vAlquiler() {
       : `<div class="tot big"><span>${a.saldo < -0.009 ? 'Le debes devolver' : a.saldo > 0.009 ? 'Le falta pagar' : 'Pagó todo'}</span><span class="${a.saldo > 0.009 ? 'er-t' : 'ok-t'}">${a.saldo > 0.009 || a.saldo < -0.009 ? money(Math.abs(a.saldo)) : '✓'}</span></div>`}
     ${ps.length ? `<div class="pagos-t">Pagos</div>` + ps.map(p => `<div class="row sp pago${p.anulado === 'Sí' ? ' anulado' : ''}">
       <div><div>${esc(String(p.fecha).slice(8, 10) + '/' + String(p.fecha).slice(5, 7))} · ${esc(p.metodo)}${p.anulado === 'Sí' ? ' · <b>anulado</b>' : ''}</div><div class="mut">${esc(p.concepto)}</div></div>
-      <div class="row"><span class="b monto">${money(p.monto)}</span>${verFoto(p.voucher, '')}${/^TPG-/.test(p.id) ? '<span class="mut" style="font-size:13px">guardando…</span>'
+      <div class="row"><span class="b monto">${money(p.monto)}</span>${p.voucher ? verFoto(p.voucher, '') : p.metodo !== 'Efectivo' && p.anulado !== 'Sí' && !/^TPG-/.test(p.id) ? fotoDespues('voucher', p.id, 'Agregar foto del voucher') : ''}${/^TPG-/.test(p.id) ? '<span class="mut" style="font-size:13px">guardando…</span>'
         : `<button class="btn2 sm" onclick="confirmar(${q(p.anulado === 'Sí' ? '¿Restaurar este pago de ' + money(p.monto) + '?' : '¿Anular este pago de ' + money(p.monto) + '?')},${q(p.anulado === 'Sí' ? 'Vuelve a contar como pagado y el saldo se recalcula.' : 'Úsalo si lo registraste por error: dejará de contar y volverá a figurar lo que debe. Se puede restaurar.')},()=>guardar('anularPago',[${q(p.id)},${p.anulado === 'Sí'}],${q(p.anulado === 'Sí' ? 'Pago restaurado' : 'Pago anulado: el saldo se recalculó')}))">${p.anulado === 'Sí' ? 'Restaurar' : 'Anular'}</button>`}</div></div>`).join('') : ''}
   </div>
   ${a.obs ? `<div class="card"><div class="mut">Nota</div><div style="white-space:pre-wrap">${esc(a.obs)}</div></div>` : ''}`;
@@ -1465,7 +1505,7 @@ function vPrenda() {
   const cp = conPrenda(p.id);
   const borrada = p.estado === 'Baja';
   setTimeout(() => pie(borrada ? `<button class="btn" data-guardar onclick="guardar('cambiarEstadoPrenda',[${q(p.id)},'Disponible'],'Prenda disponible otra vez')">↩️ Volver a ponerla disponible</button>`
-    : `<button class="btn" onclick="ir('nuevo',{prenda:${q(p.id)}})">Alquilar esta prenda</button><button class="btn2" onclick="ir('prendaForm',${q(p.id)})">${ic('editar')} Editar</button>`), 0);
+    : `<button class="btn" onclick="ir('nuevo',{prenda:${q(p.id)}${libreDesde(p.id) ? ',desde:' + q(libreDesde(p.id)) : ''}})">${libreDesde(p.id) ? 'Reservarla desde el ' + fc(libreDesde(p.id)) : 'Alquilar esta prenda'}</button><button class="btn2" onclick="ir('prendaForm',${q(p.id)})">${ic('editar')} Editar</button>`), 0);
   return cabecera(esc(p.nombre), `${esc(p.id)} · ${money(p.precio)}`) + (borrada ? '<div class="warn">Eliminada: ya no sale para alquilar. Su historial se conserva.</div>' : '') + `
   <div class="card row">${miniatura(p.foto)}<div style="flex:1">${pill(p.estado)} <div class="mut" style="margin-top:4px">${esc([p.tipo, p.talla && 'Talla ' + p.talla, p.color].filter(Boolean).join(' · '))}</div>${p.notas ? `<div class="mut">${esc(p.notas)}</div>` : ''}</div>${verFoto(p.foto, 'Ver')}</div>
   ${cp.fuera ? `<div class="card" onclick="ir('alquiler',${q(cp.fuera.id)})" style="cursor:pointer">La tiene <b>${esc(cp.fuera.clienta)}</b>, vuelve ${fl(cp.fuera.pactada)} ${estadoVis(cp.fuera) === 'Atrasado' ? pill('Atrasado') : ''}</div>` : ''}
