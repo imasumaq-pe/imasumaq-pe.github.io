@@ -59,7 +59,23 @@ window.ES_APP = true;
       setChangeHandler: function (f) { window.addEventListener('popstate', function (e) { f({ state: e.state }); }); }
     }
   } };
-  if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () { }); });
+  // Actualizaciones: busca versión nueva al abrir y cada 30 min; cuando llega, recarga sola (si no estás llenando algo).
+  if ('serviceWorker' in navigator) {
+    var habiaVersion = !!navigator.serviceWorker.controller, recargada = false;
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+      if (!habiaVersion || recargada) return;
+      var ocupada = function () { try { return !!(window.S && (S.form || S.edit)) || !!(document.getElementById('capa') || {}).innerHTML; } catch (e) { return false; } };
+      var intentar = function () { if (ocupada()) { setTimeout(intentar, 5000); return; } recargada = true; location.reload(); };
+      intentar();
+    });
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').then(function (reg) {
+        reg.update().catch(function () { });
+        setInterval(function () { reg.update().catch(function () { }); }, 30 * 60 * 1000);
+        document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') reg.update().catch(function () { }); });
+      }).catch(function () { });
+    });
+  }
 })();
 </script>
 
@@ -355,28 +371,35 @@ async function procesarCola() {
   S.procesandoCola = true; pintarEstadoCola();
   try {
     while (S.cola.length) {
-      const t = S.cola[0];
-      if (t.error) break;
+      if (S.cola[0].error) break;
+      // Todo lo pendiente viaja junto (hasta 8 cambios por viaje): mucho más rápido que uno por uno.
+      const lote = [];
+      for (const t of S.cola) { if (t.error || lote.length >= 8) break; lote.push(t); }
+      lote.forEach(t => { t.intentos++; }); persistirCola();
       let r;
       try {
-        t.intentos++; persistirCola();
-        r = await llamar('ejecutar', t.op, t.fn, t.args);
+        r = await llamar('ejecutarLote', lote.map(t => ({ op: t.op, fn: t.fn, args: t.args, tmp: t.tmp || '' })));
       } catch (e) {
         const msg = String(e && e.message ? e.message : e).replace(/^(Error|Exception):\s*/, '');
         const sinRed = /networkerror|failed to fetch|http 0|sin conexi[oó]n|load failed/i.test(msg) || navigator.onLine === false;
-        if (sinRed || (/connection|conexi[oó]n|timed? ?out|tiempo de espera|ocupado guardando|server error occurred|error del servidor/i.test(msg) && t.intentos < 50)) {
+        if (sinRed || (/connection|conexi[oó]n|timed? ?out|tiempo de espera|ocupado guardando|server error occurred|error del servidor/i.test(msg) && lote[0].intentos < 50)) {
           S.colaEstado = 'offline'; pintarEstadoCola();
-          clearTimeout(colaTimer); colaTimer = setTimeout(procesarCola, Math.min(30000, 3000 * t.intentos));
+          clearTimeout(colaTimer); colaTimer = setTimeout(procesarCola, Math.min(30000, 3000 * lote[0].intentos));
           break;
         }
-        t.error = msg; persistirCola(); pintarEstadoCola(); mostrarErrorCola(); break;
+        S.cola[0].error = msg; persistirCola(); pintarEstadoCola(); mostrarErrorCola(); break;
       }
-      S.cola.shift();
-      if (t.tmp && r && r.id && r.id !== t.tmp) cambiarIdTmp(t.tmp, r.id);
+      let fallo = false;
+      for (const res of (r && r.resultados) || []) {
+        if (res.error) { if (S.cola[0]) S.cola[0].error = res.error; fallo = true; break; }
+        const t = S.cola.shift();
+        if (t && t.tmp && res.id && res.id !== t.tmp) cambiarIdTmp(t.tmp, res.id);
+      }
       persistirCola();
-      S.colaEstado = 'ok';
+      S.colaEstado = fallo ? '' : 'ok';
       if (r && r.datos) { setDatos(r.datos, true); S.cola.forEach(x => { try { aplicarLocal(x); } catch (e) { } }); reindexar(); }
       refrescarVistaSiSePuede();
+      if (fallo) { pintarEstadoCola(); mostrarErrorCola(); break; }
     }
   } finally { S.procesandoCola = false; pintarEstadoCola(); }
 }
