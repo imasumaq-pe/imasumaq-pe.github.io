@@ -186,6 +186,8 @@ h2{font-size:16px;margin:18px 0 8px;font-weight:700}
 .check{width:28px;height:28px;border-radius:50%;border:2px solid var(--bd2);flex:none;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800}
 .check.on{background:var(--ok);border-color:var(--ok);color:#fff}
 .btn2.solo-ic{display:inline-flex;align-items:center;justify-content:center;padding:0 10px;min-height:44px;min-width:44px;margin-left:6px;vertical-align:middle}.btn2.solo-ic .i{width:18px;height:18px;margin:0}
+.foto-campo{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}.fprev{width:64px;height:64px;border-radius:12px;object-fit:cover;background:var(--grbg);cursor:zoom-in;border:1px solid var(--bd)}
+.foto-grande{display:block;width:100%;padding:0;border:0;background:var(--grbg);border-radius:16px;overflow:hidden;margin:0 0 12px;cursor:zoom-in}.foto-grande img{display:block;width:100%;max-height:340px;object-fit:contain;min-height:120px}
 .thumb.carga{animation:latido 1.2s ease-in-out infinite}@keyframes latido{50%{opacity:.45}}
 .visor{text-align:center}.visor-img{display:block;max-width:100%;max-height:calc(70vh / var(--z,1));margin:0 auto;border-radius:12px;object-fit:contain;transition:filter .25s}.visor-img.borrosa{filter:blur(6px)}
 .visor-carga{display:flex;flex-direction:column;align-items:center;gap:10px;padding:40px 12px;color:var(--tx2)}.visor-carga .i{width:34px;height:34px}
@@ -344,7 +346,7 @@ function cargarMini(img) {
   const id = img.dataset.fid;
   if (!id || S.fotoNo['m:' + id]) return;
   img.classList.add('carga');
-  pedirFoto(id, true).then(u => { img.src = u; img.classList.remove('carga'); }, () => img.classList.remove('carga'));
+  pedirFoto(id, img.dataset.g !== '1').then(u => { img.src = u; img.classList.remove('carga'); }, () => img.classList.remove('carga'));
 }
 const obsFotos = window.IntersectionObserver ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { obsFotos.unobserve(e.target); cargarMini(e.target); } }), { rootMargin: '300px' }) : null;
 function vigilarFotos() { document.querySelectorAll('img[data-fid]:not([data-v])').forEach(img => { img.dataset.v = '1'; if (obsFotos) obsFotos.observe(img); else cargarMini(img); }); }
@@ -358,16 +360,23 @@ function miniatura(url) {
   if (window.ES_APP) return `<img class="thumb" src="${VACIA}" data-fid="${id}" alt="Foto de la prenda">`;
   return `<img class="thumb" src="https:\/\/drive.google.com/thumbnail?id=${id}&sz=w300" onerror="fotoPorGoogle(this,'${id}')" alt="Foto de la prenda" loading="lazy">`;
 }
+// Foto grande (ficha de la prenda). Tocarla la abre en pantalla completa.
+function fotoGrande(url) {
+  const id = driveId(url); if (!id) return '';
+  const listo = S.fotoUrl['g:' + id] || S.fotoUrl['m:' + id];
+  const src = listo || (window.ES_APP ? VACIA : 'https:\/\/drive.google.com/thumbnail?id=' + id + '&sz=w900');
+  return `<button type="button" class="foto-grande" onclick="abrirFoto('${id}')" aria-label="Ver foto en grande"><img src="${src}" alt="Foto de la prenda"${!listo && window.ES_APP ? ` data-fid="${id}" data-g="1"` : !listo ? ` onerror="this.dataset.g='1';fotoPorGoogle(this,'${id}')"` : ''}></button>`;
+}
 function verFoto(url, txt) {
   if (!url) return '';
   if (url === 'pendiente') return '<span class="mut" style="font-size:13px">foto guardando…</span>';
   const id = driveId(url);
-  if (window.ES_APP && id) return `<button type="button" class="btn2 sm" onclick="event.stopPropagation();abrirFoto('${id}')">${ic('foto')} ${esc(txt || 'Foto')}</button>`;
+  if (id) return `<button type="button" class="btn2 sm" onclick="event.stopPropagation();abrirFoto('${id}')">${ic('foto')} ${esc(txt || 'Foto')}</button>`;
   return `<a href="${esc(url)}" target="_blank" rel="noopener" class="btn2 sm" onclick="event.stopPropagation()">${ic('foto')} ${esc(txt || 'Foto')}</a>`;
 }
 function abrirFoto(id) {
-  const mini = S.fotoUrl['m:' + id];
-  modal(`<div class="visor">${mini ? `<img id="visor-img" class="visor-img borrosa" src="${mini}" alt="Foto">` : `<div id="visor-img" class="visor-carga">${ic('foto')}<div>Cargando foto…</div></div>`}
+  const mini = S.fotoUrl['g:' + id] || S.fotoUrl['m:' + id] || (window.ES_APP ? '' : 'https:\/\/drive.google.com/thumbnail?id=' + id + '&sz=w1600');
+  modal(`<div class="visor">${mini ? `<img id="visor-img" class="visor-img${S.fotoUrl['g:' + id] ? '' : ' borrosa'}" src="${mini}" alt="Foto" onload="if(!window.ES_APP&&!/^data/.test(this.src))this.classList.remove('borrosa')">` : `<div id="visor-img" class="visor-carga">${ic('foto')}<div>Cargando foto…</div></div>`}
     <button class="btn2 w" style="margin-top:10px" onclick="cerrarModal()">Cerrar</button></div>`);
   pedirFoto(id, false).then(u => {
     const el = $('visor-img'); if (!el) return;
@@ -725,9 +734,18 @@ function leerFoto(file) {
     fr.onerror = () => rej(new Error('No se pudo leer la foto.')); fr.readAsDataURL(file);
   });
 }
-function botonFoto(ruta, txt, tiene) {
-  return `<label class="btn2 sm" style="margin-top:8px"><input type="file" accept="${'image/' + '*'}" style="display:none" onchange="tomarFoto(this,${q(ruta)})">${ic('camara')} ${esc(txt || 'Foto')}</label> <span class="ok-t" style="font-size:14px" id="fl-${esc(ruta)}">${tiene ? '✓ lista' : ''}</span>`;
+function botonFoto(ruta, txt, tiene, guardada) {
+  // Vista previa: la foto recién elegida (o la que ya tenía guardada). Tocarla la abre en grande.
+  const id = driveId(guardada), src = tiene || (id && (S.fotoUrl['g:' + id] || S.fotoUrl['m:' + id])) || '';
+  const prev = tiene ? `<img class="fprev" id="fp-${esc(ruta)}" src="${tiene}" alt="Foto elegida" onclick="verFotoElegida(${q(ruta)})">`
+    : id ? (src ? `<img class="fprev" id="fp-${esc(ruta)}" src="${src}" alt="Foto guardada" onclick="abrirFoto(${q(id)})">`
+      : window.ES_APP ? `<img class="fprev" id="fp-${esc(ruta)}" src="${VACIA}" data-fid="${id}" data-g="1" alt="Foto guardada" onclick="abrirFoto(${q(id)})">`
+        : `<img class="fprev" id="fp-${esc(ruta)}" src="https:\/\/drive.google.com/thumbnail?id=${id}&sz=w400" onerror="fotoPorGoogle(this,'${id}')" alt="Foto guardada" onclick="abrirFoto(${q(id)})">`)
+      : `<img class="fprev" id="fp-${esc(ruta)}" alt="" style="display:none" onclick="verFotoElegida(${q(ruta)})">`;
+  return `<div class="foto-campo">${prev}<label class="btn2 sm"><input type="file" accept="${'image/' + '*'}" style="display:none" onchange="tomarFoto(this,${q(ruta)})">${ic('camara')} ${esc(txt || 'Foto')}</label> <span class="ok-t" style="font-size:14px" id="fl-${esc(ruta)}">${tiene ? '✓ lista' : ''}</span></div>`;
 }
+function fotoElegida(ruta) { const p = ruta.split('|'); let o = S.form; for (let i = 0; i < p.length && o; i++) o = o[p[i]]; return o; }
+function verFotoElegida(ruta) { const u = fotoElegida(ruta); if (u) modal(`<div class="visor"><img class="visor-img" src="${u}" alt="Foto"><button class="btn2 w" style="margin-top:10px" onclick="cerrarModal()">Cerrar</button></div>`); }
 // Botón chico (solo el ícono de cámara) para agregar una foto a algo ya guardado: voucher o DNI.
 function fotoDespues(tipo, id, txt) {
   return `<label class="btn2 sm solo-ic" title="${esc(txt)}" aria-label="${esc(txt)}" onclick="event.stopPropagation()"><input type="file" accept="${'image/' + '*'}" style="display:none" onchange="adjuntarFotoUI(this,${q(tipo)},${q(id)})">${ic('camara')}</label>`;
@@ -746,6 +764,7 @@ async function tomarFoto(inp, ruta) {
     for (let i = 0; i < p.length - 1; i++) o = o[p[i]];
     o[p[p.length - 1]] = data;
     if (lbl) lbl.textContent = '✓ lista';
+    const im = $('fp-' + ruta); if (im) { im.src = data; im.style.display = ''; im.onclick = () => verFotoElegida(ruta); im.removeAttribute('data-fid'); }
   } catch (e) { if (lbl) lbl.textContent = ''; toast(e.message, true); }
 }
 function chips(lista, actual, fn, extra) {
@@ -1514,7 +1533,7 @@ function vPrenda() {
   setTimeout(() => pie(borrada ? `<button class="btn" data-guardar onclick="guardar('cambiarEstadoPrenda',[${q(p.id)},'Disponible'],'Prenda disponible otra vez')">↩️ Volver a ponerla disponible</button>`
     : `<button class="btn" onclick="ir('nuevo',{prenda:${q(p.id)}${libreDesde(p.id) ? ',desde:' + q(libreDesde(p.id)) : ''}})">${libreDesde(p.id) ? 'Reservarla desde el ' + fc(libreDesde(p.id)) : 'Alquilar esta prenda'}</button><button class="btn2" onclick="ir('prendaForm',${q(p.id)})">${ic('editar')} Editar</button>`), 0);
   return cabecera(esc(p.nombre), `${esc(p.id)} · ${money(p.precio)}`) + (borrada ? '<div class="warn">Eliminada: ya no sale para alquilar. Su historial se conserva.</div>' : '') + `
-  <div class="card row">${miniatura(p.foto)}<div style="flex:1">${pill(p.estado)} <div class="mut" style="margin-top:4px">${esc([p.tipo, p.talla && 'Talla ' + p.talla, p.color].filter(Boolean).join(' · '))}</div>${p.notas ? `<div class="mut">${esc(p.notas)}</div>` : ''}</div>${verFoto(p.foto, 'Ver')}</div>
+  ${fotoGrande(p.foto)}<div class="card row">${p.foto ? '' : miniatura(p.foto)}<div style="flex:1">${pill(p.estado)} <div class="mut" style="margin-top:4px">${esc([p.tipo, p.talla && 'Talla ' + p.talla, p.color].filter(Boolean).join(' · '))}</div>${p.notas ? `<div class="mut">${esc(p.notas)}</div>` : ''}</div>${verFoto(p.foto, 'Ver')}</div>
   ${cp.fuera ? `<div class="card" onclick="ir('alquiler',${q(cp.fuera.id)})" style="cursor:pointer">La tiene <b>${esc(cp.fuera.clienta)}</b>, vuelve ${fl(cp.fuera.pactada)} ${estadoVis(cp.fuera) === 'Atrasado' ? pill('Atrasado') : ''}</div>` : ''}
   ${cp.proximas.map(a => `<div class="card" onclick="ir('alquiler',${q(a.id)})" style="cursor:pointer">Reservada para <b>${esc(a.clienta)}</b>: ${fc(a.salida)} → ${fc(a.pactada)}</div>`).join('')}
   ${p.estado !== 'Alquilada' && !borrada ? `<div class="l">Estado</div><div class="chips">${['Disponible', 'Reparación'].map(e => `<button class="chip ${p.estado === e ? 'on' : ''}" data-guardar onclick="guardar('cambiarEstadoPrenda',[${q(p.id)},${q(e)}],'Ahora: ${e}')">${e === 'Reparación' ? 'En reparación' : e}</button>`).join('')}</div>` : ''}
@@ -1554,7 +1573,7 @@ function vPrendaForm() {
     <label class="l" style="margin-top:0">Nombre</label><input value="${esc(f.nombre)}" oninput="F().nombre=this.value" placeholder="Vestido rojo largo">
     <div class="l">Tipo</div>${chips(TIPOS.indexOf(f.tipoP) >= 0 ? TIPOS : TIPOS.concat([f.tipoP]), f.tipoP, 'setTipoP')}
     <label class="l">Precio normal de alquiler (S/)</label><input inputmode="decimal" value="${esc(f.precio)}" oninput="F().precio=this.value"><div class="mut">Es el precio sugerido. En cada alquiler lo puedes subir o bajar.</div>
-    ${botonFoto('foto', p && p.foto ? 'Cambiar foto' : 'Foto (opcional)', f.foto)}
+    ${botonFoto('foto', p && p.foto ? 'Cambiar foto' : 'Foto (opcional)', f.foto, p && p.foto)}
     ${f.mas ? `<div class="g2"><div><label class="l">Talla</label><input value="${esc(f.talla)}" oninput="F().talla=this.value" placeholder="S / M / 37"></div><div><label class="l">Color</label><input value="${esc(f.color)}" oninput="F().color=this.value"></div></div>
       <label class="l">Código ${p ? '(no se cambia)' : '(si lo dejas vacío se crea solo)'}</label><input value="${esc(f.id)}" ${p ? 'disabled' : ''} oninput="F().id=this.value" placeholder="VE-001">
       <label class="l">Notas</label><textarea oninput="F().notas=this.value" placeholder="Ej. se lava en seco">${esc(f.notas)}</textarea>`
