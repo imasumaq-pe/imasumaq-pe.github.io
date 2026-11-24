@@ -1,0 +1,30 @@
+{
+ "name": "ImaSumaq",
+ "short_name": "ImaSumaq",
+ "description": "Alquiler de prendas: funciona sin internet.",
+ "lang": "es-PE",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#FBF7F9",
+ "theme_color": "#6A1B4D",
+ "icons": [
+  {
+   "src": "icono-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icono-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "icono-mask.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}
