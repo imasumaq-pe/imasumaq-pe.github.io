@@ -544,7 +544,20 @@ html.ios.grad{background:#151314}
 html.ios.grad body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(90% 55% at 0% 0%,var(--luz1),transparent 70%),radial-gradient(80% 55% at 100% 100%,var(--luz2),transparent 70%),linear-gradient(160deg,#1E1B1C,#141213 55%,#181415);transform:translateZ(0)}
 @media (prefers-color-scheme:light){html.ios[data-tema=vino]{background:#FBF6F9}html.ios[data-tema=vino] body::before{background:radial-gradient(90% 55% at 0% 0%,var(--luz1),transparent 70%),radial-gradient(80% 55% at 100% 100%,var(--luz2),transparent 70%),linear-gradient(160deg,#FFFFFF,#FBF6F9 55%,#F7EEF5)}}
 /* Contraste AA: el texto blanco va sobre tonos más profundos del degradado */
-html.ios[data-tema=vino]{--g1:#C2448F;--g2:#7E1F5C}html.ios.grad .btn,html.ios.grad .grande.pri,html.ios.grad .nav button.on,html.ios.grad .nav-logo{background:linear-gradient(120deg,var(--g1),var(--g2))!important}
+html.ios[data-tema=vino]{--g1:#C2448F;--g2:#7E1F5C}html.ios.grad .btn,html.ios.grad .grande.pri,html.ios.grad .nav-logo{background:linear-gradient(120deg,var(--g1),var(--g2))!important}
+@media (min-width:900px){html.ios.grad .nav button.on{background:linear-gradient(120deg,var(--g1),var(--g2))!important}}
+/* Celular: la pestaña activa es una cápsula suave con ícono y texto en ciruela (bien legibles), como en iPhone */
+@media (max-width:899px){
+ html.ios.grad .nav button{color:var(--tx2);font-weight:600}
+ html.ios.grad .nav button.on{background:var(--acbg)!important;color:var(--pri);font-weight:700;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--pri) 22%,transparent)}
+ html.ios.grad .nav button.on .i{stroke-width:2.2}
+ html.ios.grad .nav button:active{transform:scale(.94);transition:transform 80ms ease-out}
+}
+/* Los títulos que reciben el foco solo para lectores de pantalla no muestran el anillo */
+html.ios.grad [tabindex="-1"]:focus,html.ios.grad [tabindex="-1"]:focus-visible{outline:none}
+/* Barra de abajo: vidrio más denso para que el texto de atrás no se lea a través */
+@media (max-width:899px){html.ios.grad .nav{background:rgba(32,28,30,.9);-webkit-backdrop-filter:saturate(180%) blur(30px);backdrop-filter:saturate(180%) blur(30px)}}
+@media (max-width:899px) and (prefers-color-scheme:light){html.ios[data-tema=vino] .nav{background:rgba(255,255,255,.92)}}
 html.ios.grad .barra div{background:linear-gradient(90deg,var(--g1),var(--pri))}
 /* Tipografía con la escala de Apple: título 34, encabezado 17 seminegrita, cuerpo 17, secundario 15; cifras alineadas */
 html.ios.grad body{font-size:17px;font-variant-numeric:tabular-nums}
