@@ -1,6 +1,6 @@
 // Guarda la app en el equipo para que abra sin internet. Cada versión nueva reemplaza a la anterior
 // (las fotos guardadas, en 'fotos-imasumaq', se conservan).
-const V = 'imasumaq-11d7aedae5';
+const V = 'imasumaq-67e5c5205b';
 const ARCHIVOS = ['./', './index.html', './manifest.webmanifest', './icono-192.png', './icono-512.png', './icono-mask.png'];
 self.addEventListener('install', e => {
   // cache: 'reload' = trae los archivos frescos del servidor (no la copia vieja del navegador)
