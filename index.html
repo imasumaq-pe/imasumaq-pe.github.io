@@ -555,6 +555,68 @@ html.ios[data-tema=vino]{--g1:#C2448F;--g2:#7E1F5C}html.ios[data-tema=ciruela]{-
 }
 /* Los títulos que reciben el foco solo para lectores de pantalla no muestran el anillo */
 html.ios.grad [tabindex="-1"]:focus,html.ios.grad [tabindex="-1"]:focus-visible{outline:none}
+/* v34 · Ventana mediana (900–1179 px): menú más angosto y una sola columna, para que nada se parta */
+@media (min-width:900px) and (max-width:1179px){
+ html.ios.grad .nav{width:206px;padding:16px 10px}
+ html.ios.grad .nav button{font-size:15px;gap:10px;padding:7px 8px}
+ html.ios.grad .nav-ic{width:32px;height:32px}
+ html.ios.grad .nav-marca{font-size:15.5px;padding:4px 4px 16px}
+ html.ios.grad main{margin-left:206px;padding:20px max(24px,calc((100% - 206px - 760px) / 2)) 110px!important}
+ html.ios.grad main.estrecho{padding-left:max(24px,calc((100% - 206px - 720px) / 2))!important;padding-right:max(24px,calc((100% - 206px - 720px) / 2))!important}
+ html.ios.grad .pie{left:206px}
+ html.ios.grad .top{padding-left:226px}
+ .inicio,html.ios .inicio{display:block}
+ .det{display:block}
+ html.ios.grad .estante{grid-row:auto}
+ .lst-acc .ib-tx span{display:none}
+ .lst-acc .ib-tx{width:50px;justify-content:center;padding:0}
+ .lst-fil .filtros-mas{margin-left:0!important}
+}
+/* v34 · Lista en la computadora: tabla clara */
+.lst-top{display:flex;align-items:center;gap:10px}
+.lst-top .buscar{flex:1;min-width:0;margin:0}
+.lst-acc{display:none;align-items:center;gap:8px;flex:none}
+@media (min-width:900px){.lst-acc{display:flex!important}}
+.segm{display:inline-flex;padding:3px;border-radius:12px;background:var(--relleno,var(--grbg));gap:2px}
+.segm button{border:0;background:transparent;color:var(--tx2);font:inherit;font-size:14px;font-weight:600;padding:0 14px;min-height:44px;border-radius:9px;cursor:pointer;transition:background-color 150ms ease,color 150ms ease}
+.segm button.on{background:var(--card);color:var(--tx);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.ib-tx{display:inline-flex;align-items:center;gap:6px;height:50px;padding:0 13px;border-radius:12px;border:1px solid var(--bd2);background:var(--card);color:var(--pri);font:inherit;font-size:14px;font-weight:600;text-decoration:none;cursor:pointer}
+.ib-tx .i{width:17px;height:17px}
+.ib-tx:hover{border-color:var(--pri)}
+.tclara{background:var(--card);border:1px solid var(--bd);border-radius:16px;overflow:hidden;margin-top:4px}
+@media (prefers-color-scheme:light){html.ios.grad .tclara{background:rgba(255,255,255,.85)}}
+table.tc{width:100%;border-collapse:collapse;font-size:14px;table-layout:fixed}
+table.tc th{text-align:left;font-size:12px;font-weight:600;color:var(--tx2);padding:11px 12px;border-bottom:1px solid var(--bd);white-space:nowrap}
+table.tc td{padding:10px 12px;overflow:hidden;border-bottom:1px solid var(--sep,var(--bd));vertical-align:middle}
+table.tc .n{text-align:right}
+table.tc tr.tr{cursor:pointer;transition:background-color 120ms ease}
+table.tc tr.tr:hover td{background:var(--acbg)}
+table.tc tr.tr:hover .tc-ir{color:var(--pri);transform:translateX(2px)}
+.tc-cab td{padding:12px 12px 4px!important;border-bottom:0!important;background:transparent!important}
+.tc-cab span{font-size:13px;font-weight:700;color:var(--tx)}
+.tc-cab b{margin-left:8px;font-size:12px;padding:1px 8px;border-radius:9px;background:var(--relleno,var(--grbg));color:var(--tx2)}
+.g-atr .tc-cab span{color:var(--er)}.g-atr .tc-cab b{background:var(--erbg);color:var(--er)}
+.g-hoy .tc-cab span{color:var(--pri)}.g-hoy .tc-cab b{background:var(--acbg);color:var(--pri)}
+.tc-nom{font-weight:650;text-transform:capitalize;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tc-sub{font-size:12.5px;color:var(--tx2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.tc-tarde{color:var(--er);font-weight:700}
+.tc-cod{font-size:11.5px;font-weight:600;color:var(--tx2);margin-left:4px;text-transform:none;font-variant-numeric:tabular-nums}
+.lst-fil{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0 10px}
+.lst-fil>.chips{margin:0!important}
+@media (min-width:900px){.lst-fil .filtros-mas{margin-left:auto!important}.lst-fil select{height:42px;padding:6px 12px!important}}
+.tc-pr{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tc-f{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums;font-weight:550}
+.tc-f .fl{color:var(--tx2);margin:0 2px}
+.tc-g{white-space:nowrap}
+.tc-tot{font-weight:700;font-variant-numeric:tabular-nums}
+.tc-ir{width:24px;color:var(--bd2);font-size:22px;text-align:center;transition:transform 150ms ease,color 150ms ease}
+tr.tc-Atrasado td:first-child{box-shadow:inset 3px 0 0 var(--er)}
+.tg{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:8px;white-space:nowrap}
+.tg-wa{background:var(--wabg);color:var(--wa)}.tg-ok{background:var(--okbg);color:var(--ok)}.tg-bl{background:var(--blbg);color:var(--bl)}
+.wa-t{color:var(--wa)}
+.tc-pie{display:flex;gap:26px;justify-content:flex-end;padding:12px 18px;font-size:13.5px;color:var(--tx2);background:var(--relleno,var(--grbg));font-variant-numeric:tabular-nums}
+.tc-pie span:first-child{margin-right:auto}
+.tc-pie b{color:var(--tx);font-size:14.5px}
 /* v32 · Paso 2: fechas en botones parejos */
 .q2{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:22px 0 9px;font-size:15px;font-weight:700;color:var(--tx)}
 .paso2>.q2:first-child{margin-top:4px}
@@ -809,6 +871,8 @@ function fc(s) { if (!s) return ''; const x = aD(s); return DIAS[x.getDay()] + '
 function fl(s) { if (!s) return ''; const x = aD(s); return DIAS_L[x.getDay()] + ' ' + pad(x.getDate()) + '/' + pad(x.getMonth() + 1); }
 function cuando(s) { const n = dias(hoy(), s); return n === 0 ? 'hoy' : n === 1 ? 'mañana' : n === -1 ? 'ayer' : fc(s); }
 function esPC() { return window.matchMedia('(min-width:900px)').matches; }
+// La tabla de varias columnas solo cuando hay espacio de verdad (ventana grande); si no, la lista por tarjetas
+function esAncha() { return window.matchMedia('(min-width:1280px)').matches; }
 function driveId(url) { const m = /\/d\/([\w-]+)/.exec(url || ''); return m ? m[1] : ''; }
 // ─────────── Fotos ───────────
 // En la app de Google las miniaturas vienen directo de Drive. En la app instalada (y cuando Drive no responde,
@@ -2124,12 +2188,12 @@ function vLista() {
   const meses = [...new Set(S.d.alquileres.map(a => String(a.salida).slice(0, 7)))].filter(Boolean).sort().reverse();
   const MES = ['', 'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
   const principales = ['Activos', 'Atrasados', 'Te deben', 'Todos'], otros = Object.keys(FILTROS).filter(k => principales.indexOf(k) < 0);
-  return `<input class="buscar" placeholder="Buscar nombre, DNI, celular o prenda" value="${esc(S.q)}" oninput="S.q=this.value;pintarResultados()" autocomplete="off">
-  ${esGrad() ? `<div class="chips scroll filtros" role="group" aria-label="Filtrar alquileres"><i class="luz" aria-hidden="true"></i>${principales.map(f => chipFiltro(f, f, S.d.alquileres.filter(FILTROS[f]).length, S.filtro === f, `S.filtro=${q(f)};render()`, { Activos: 'vestido', Atrasados: 'reloj', 'Te deben': 'cobrar', Todos: 'lista' }[f])).join('')}</div><div class="chips filtros-mas">` : `<div class="chips scroll" style="margin-top:10px">${principales.map(f => `<button class="chip ${S.filtro === f ? 'on' : ''}" onclick="S.filtro=${q(f)};render()">${f}</button>`).join('')}`}
+  return `<div class="lst-top"><input class="buscar" placeholder="Buscar nombre, DNI, celular o prenda" value="${esc(S.q)}" oninput="S.q=this.value;pintarResultados()" autocomplete="off">
+    <div class="lst-acc solo-pc"><div class="segm" role="group" aria-label="Ver"><button class="${S.modo !== 'prenda' ? 'on' : ''}" onclick="S.modo='alquiler';render()">Por alquiler</button><button class="${S.modo === 'prenda' ? 'on' : ''}" onclick="S.modo='prenda';render()">Por prenda</button></div>
+    <button class="ib-tx" onclick="descargar()" title="Descargar Excel con todas las columnas">${ic('descargar')}<span>Excel</span></button><a class="ib-tx" href="${esc(S.d.urlLibro)}" target="_blank" rel="noopener" title="Abrir Google Sheet">${ic('sheet')}<span>Sheet</span></a></div></div>
+  <div class="lst-fil">${esGrad() ? `<div class="chips scroll filtros" role="group" aria-label="Filtrar alquileres"><i class="luz" aria-hidden="true"></i>${principales.map(f => chipFiltro(f, f, S.d.alquileres.filter(FILTROS[f]).length, S.filtro === f, `S.filtro=${q(f)};render()`, { Activos: 'vestido', Atrasados: 'reloj', 'Te deben': 'cobrar', Todos: 'lista' }[f])).join('')}</div><div class="chips filtros-mas">` : `<div class="chips scroll" style="margin-top:10px">${principales.map(f => `<button class="chip ${S.filtro === f ? 'on' : ''}" onclick="S.filtro=${q(f)};render()">${f}</button>`).join('')}`}
     <select style="width:auto;border-radius:22px;padding:8px 12px;${otros.indexOf(S.filtro) >= 0 ? 'background:var(--pri);color:var(--onpri)' : ''}" onchange="S.filtro=this.value||'Activos';render()"><option value="">Más…</option>${otros.map(o => `<option ${S.filtro === o ? 'selected' : ''}>${o}</option>`).join('')}</select>
-    <select style="width:auto;border-radius:22px;padding:8px 12px" onchange="S.mes=this.value;pintarResultados()"><option value="">Todos los meses</option>${meses.map(m => `<option value="${m}" ${S.mes === m ? 'selected' : ''}>${MES[+m.slice(5)]} ${m.slice(0, 4)}</option>`).join('')}</select></div>
-  <div class="row sp solo-pc" style="margin-bottom:10px;width:100%"><div class="row"><button class="chip ${S.modo === 'alquiler' ? 'on' : ''}" onclick="S.modo='alquiler';render()">Por alquiler</button><button class="chip ${S.modo === 'prenda' ? 'on' : ''}" onclick="S.modo='prenda';render()">Por prenda</button></div>
-    <div class="row"><button class="btn2 sm" onclick="descargar()">${ic('descargar')} Descargar Excel</button><a class="btn2 sm" href="${esc(S.d.urlLibro)}" target="_blank" rel="noopener">Abrir Google Sheet</a></div></div>
+    <select style="width:auto;border-radius:22px;padding:8px 12px" onchange="S.mes=this.value;pintarResultados()"><option value="">Todos los meses</option>${meses.map(m => `<option value="${m}" ${S.mes === m ? 'selected' : ''}>${MES[+m.slice(5)]} ${m.slice(0, 4)}</option>`).join('')}</select></div></div>
   <div id="res"></div>`;
 }
 // Agrupa la lista por cuándo hay que actuar: Atrasados, Hoy, Mañana, Esta semana, Más adelante, Terminados
@@ -2169,7 +2233,8 @@ function filasTabla() {
 }
 function pintarResultados() {
   const box = $('res'); if (!box) return;
-  if (esPC()) {
+  if (esAncha() && S.modo !== 'prenda') { box.innerHTML = tablaClara(filtrados()); return; }
+  if (esPC() && S.modo === 'prenda') {
     const T = filasTabla();
     if (!T.filas.length) { box.innerHTML = '<div class="empty">Sin resultados.</div>'; return; }
     box.innerHTML = `<div class="tabla-wrap"><table class="t"><thead><tr>${T.cols.map((c, i) => `<th class="${T.n.indexOf(i) >= 0 ? 'n' : ''}">${c}</th>`).join('')}</tr></thead>
@@ -2182,6 +2247,35 @@ function pintarResultados() {
       return filaAlq(a, et); }).join('')}</div>` : '<div class="empty">Sin resultados.</div>';
     if (esGrad() && L.length) box.innerHTML = `<div class="mut" style="margin:6px 2px">${L.length} alquiler${L.length === 1 ? '' : 'es'}${debe > 0 ? ' · te deben ' + money(debe) : ''}</div>` + gruposAlq(L);
   }
+}
+// Tabla de la computadora: pocas columnas, lo importante a la vista; el Excel sigue trayendo todas
+function tablaClara(L) {
+  if (!L.length) return '<div class="empty">Sin resultados.</div>';
+  const h = hoy(), G = [['atr', 'Atrasados'], ['hoy', 'Hoy'], ['man', 'Mañana'], ['sem', 'Esta semana'], ['des', 'Más adelante'], ['fin', 'Terminados']], B = {};
+  const fila = a => {
+    const e = estadoVis(a), nd = dias(a.salida, a.pactada), ds = detDe(a.id);
+    const rel = e === 'Atrasado' ? `<span class="tc-tarde">${dias(a.pactada, h)} ${dias(a.pactada, h) === 1 ? 'día' : 'días'} tarde</span>` : e === 'Entregado' ? 'vuelve ' + cuando(a.pactada) : e === 'Reservado' ? 'sale ' + cuando(a.salida) : a.devuelto ? 'volvió ' + fc(a.devuelto) : '';
+    const gar = !a.garantia || a.garantia === 'Ninguna' ? '<span class="mut">—</span>' : `${esc(a.garantia === 'DNI físico' ? 'DNI' : a.garantia)} ${a.garantiaDevuelta === 'No' ? '<span class="tg tg-wa">la tienes</span>' : a.garantiaDevuelta === 'Sí' ? '<span class="tg tg-ok">devuelta</span>' : ''}`;
+    const v = r2(a.saldo);
+    const cobro = a.estado === 'Anulado' ? '<span class="mut">anulado</span>' : v > 0.009 ? `<span class="tg tg-wa">debe ${money(v)}</span>` : v < -0.009 ? `<span class="tg tg-bl">devolver ${money(-v)}</span>` : '<span class="tg tg-ok">pagado ✓</span>';
+    return `<tr class="tr tc-${e}" onclick="ir('alquiler',${q(a.id)})">
+      <td><div class="tc-nom">${esc(a.clienta)} <span class="tc-cod">${esc(a.id)}</span></div><div class="tc-sub">${a.dni ? 'DNI ' + esc(a.dni) : 'sin DNI'}${a.telefono ? ' · ' + esc(a.telefono) : ''}</div></td>
+      <td><div class="tc-pr" title="${esc(prendasTxt(a))}">${esc(prendasTxt(a) || '—')}</div><div class="tc-sub">${ds.length} prenda${ds.length === 1 ? '' : 's'}${a.obs ? ' · <span title="' + esc(a.obs) + '">📝 nota</span>' : ''}</div></td>
+      <td><div class="tc-f">${fc(a.salida)} <span class="fl">→</span> ${fc(a.pactada)}</div><div class="tc-sub">${nd} ${nd === 1 ? 'día' : 'días'}${rel ? ' · ' + rel : ''}</div></td>
+      <td>${pill(e)}</td>
+      <td class="tc-g">${gar}</td>
+      <td class="n"><div class="tc-tot">${money(a.total)}</div><div class="tc-sub">${cobro}${a.mora > 0 ? ' <span class="mut">mora ' + money(a.mora) + '</span>' : ''}</div></td>
+      <td class="tc-ir" aria-hidden="true">›</td></tr>`;
+  };
+  L.forEach(a => {
+    const e = estadoVis(a), d = e === 'Reservado' ? a.salida : a.pactada, n = dias(h, d);
+    const k = e === 'Atrasado' ? 'atr' : (e === 'Devuelto' || e === 'Anulado') ? 'fin' : n <= 0 ? 'hoy' : n === 1 ? 'man' : n <= 7 ? 'sem' : 'des';
+    (B[k] = B[k] || []).push(fila(a));
+  });
+  const vivos = L.filter(a => a.estado !== 'Anulado'), sum = k => vivos.reduce((t, a) => t + r2(a[k]), 0), debe = vivos.reduce((t, a) => t + Math.max(0, r2(a.saldo)), 0);
+  return `<div class="tclara"><table class="tc"><colgroup><col style="width:23%"><col style="width:20%"><col style="width:23%"><col style="width:11%"><col style="width:11%"><col style="width:12%"><col style="width:36px"></colgroup><thead><tr><th>Clienta</th><th>Prendas</th><th>Fechas</th><th>Estado</th><th>Garantía</th><th class="n">Cobro</th><th></th></tr></thead>
+    ${G.filter(g => B[g[0]]).map(g => `<tbody class="g-${g[0]}"><tr class="tc-cab"><td colspan="7"><span>${g[1]}</span><b>${B[g[0]].length}</b></td></tr>${B[g[0]].join('')}</tbody>`).join('')}</table>
+    <div class="tc-pie"><span><b>${L.length}</b> alquiler${L.length === 1 ? '' : 'es'}</span><span>Total <b>${money(sum('total'))}</b></span><span>Cobrado <b class="ok-t">${money(sum('pagado'))}</b></span><span>Te deben <b class="${debe > 0.009 ? 'wa-t' : ''}">${money(debe)}</b></span></div></div>`;
 }
 function descargar() {
   const T = filasTabla();
