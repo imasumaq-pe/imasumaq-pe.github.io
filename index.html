@@ -251,6 +251,365 @@ table.t tfoot td{font-weight:700;background:var(--grbg);position:sticky;bottom:0
  #pres,#cres{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:28px}
  #pres>.empty,#cres>.empty,#cres>.link,#cres>.mut{grid-column:1/-1}
 }
+/* ── Tema «Apple»: iPhone en el celular, Mac en la computadora. Letra del sistema, listas agrupadas, vidrio, empujar/volver ── */
+html.ios{--bg:#F2F2F7;--card:#FFFFFF;--tx:#000000;--tx2:#6C6C70;--bd:#E5E5EA;--bd2:#C6C6C8;--sep:rgba(60,60,67,.29);--pri:#8E2468;--onpri:#FFFFFF;--ac:#8E2468;--acbg:rgba(142,36,104,.11);--acsol:#F2E2EC;--ok:#248A3D;--okbg:rgba(52,199,89,.15);--wa:#B25000;--wabg:rgba(255,149,0,.16);--er:#D70015;--erbg:rgba(255,59,48,.12);--bl:#0040DD;--blbg:rgba(0,122,255,.12);--gr:#6C6C70;--grbg:rgba(118,118,128,.12);--relleno:rgba(118,118,128,.12);--toque:#D1D1D6;--vidrio:rgba(249,249,249,.78);--vidrio2:rgba(255,255,255,.72);--foco:#8E2468;--wsp:#248A3D}
+@media (prefers-color-scheme:dark){html.ios{--bg:#000000;--card:#1C1C1E;--tx:#FFFFFF;--tx2:#98989F;--bd:#38383A;--bd2:#48484A;--sep:rgba(84,84,88,.6);--pri:#E58BC1;--onpri:#2A0A1E;--ac:#E58BC1;--acbg:rgba(229,139,193,.16);--acsol:#3B2834;--ok:#30D158;--okbg:rgba(48,209,88,.16);--wa:#FF9F0A;--wabg:rgba(255,159,10,.16);--er:#FF453A;--erbg:rgba(255,69,58,.16);--bl:#0A84FF;--blbg:rgba(10,132,255,.16);--gr:#98989F;--grbg:rgba(118,118,128,.24);--relleno:rgba(118,118,128,.24);--toque:#3A3A3C;--vidrio:rgba(22,22,24,.78);--vidrio2:rgba(44,44,46,.72);--foco:#E58BC1}}
+html.ios,html.ios body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI Variable Text","Segoe UI",system-ui,Roboto,sans-serif;font-size:17px;letter-spacing:-.01em;-webkit-font-smoothing:antialiased}
+html.ios .gran-titulo{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI Variable Display","Segoe UI",system-ui,sans-serif;font-size:34px;line-height:1.12;font-weight:700;letter-spacing:-.025em;margin:2px 2px 14px}
+html.ios .fecha-mini{font-size:13px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--tx2);margin:4px 2px 2px}
+html.ios .saludo{display:none}
+/* Barra de arriba: vidrio. El título pequeño aparece al bajar (como en iPhone) */
+html.ios .top{background:var(--vidrio);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:.5px solid transparent;min-height:50px;padding:4px 8px;transition:border-color .2s ease}
+html.ios body.bajado .top{border-bottom-color:var(--sep)}
+html.ios .top h1{position:absolute;left:50%;transform:translateX(-50%);max-width:46%;text-align:center;font-size:17px;font-weight:600;letter-spacing:-.02em;opacity:0;transition:opacity .2s ease}
+html.ios body.bajado .top h1{opacity:1}
+html.ios #estado-cola{margin-left:auto}
+html.ios .top .ib{color:var(--pri)}
+html.ios main{padding:8px 16px 120px}
+/* Encabezados de sección y textos */
+html.ios h2{font-size:22px;font-weight:700;letter-spacing:-.02em;margin:26px 2px 8px}
+html.ios .l{font-size:13px;text-transform:uppercase;letter-spacing:.02em;color:var(--tx2);margin:22px 16px 6px}
+html.ios .mut{color:var(--tx2);font-size:15px}
+html.ios .preg{font-size:28px;font-weight:700;letter-spacing:-.025em}
+html.ios .paso{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.02em}
+html.ios .barra{height:4px;background:var(--relleno);border-radius:2px}html.ios .barra div{height:4px;border-radius:2px;transition:width .45s cubic-bezier(.32,.72,0,1)}
+/* Listas agrupadas: tarjetas blancas, rayita fina que empieza después del ícono, gris al tocar */
+html.ios .card{border:0;border-radius:12px;background:var(--card)}
+html.ios .fila{border-bottom:0;position:relative;padding:11px 4px;margin:0 -8px;padding-left:8px;padding-right:8px;border-radius:10px;transition:background-color .25s ease}
+html.ios .fila:has(+ .fila)::after{content:'';position:absolute;left:62px;right:8px;bottom:0;height:.5px;background:var(--sep)}
+html.ios .fila:active{background:var(--toque);transition:none}
+html.ios .fila:active::after{opacity:0}
+html.ios .opc{border-bottom:.5px solid var(--sep);border-radius:0}
+html.ios .opc:active{background:var(--toque);transition:none}
+html.ios .thumb{border-radius:8px;width:46px;height:46px}
+html.ios .badge{border-radius:10px;width:38px;height:38px}
+/* Botones: lleno con el color de la tienda; secundario «teñido» sin borde */
+html.ios .btn{border-radius:14px;font-size:17px;font-weight:600;letter-spacing:-.01em;padding:15px}
+html.ios .btn2{border:0;background:var(--acsol);color:var(--pri);border-radius:12px;font-weight:600}
+html.ios .btn2.er{background:var(--erbg);color:var(--er)}
+html.ios .btn2.sm{border-radius:999px;padding:7px 14px;min-height:36px;font-size:15px}
+html.ios .btn:active,html.ios .btn2:active{transform:scale(.97);opacity:.85;transition:none}
+html.ios .link,html.ios .lnk{color:var(--pri);text-decoration:none;font-weight:500}
+html.ios .chip{border:0;background:var(--relleno);border-radius:999px;padding:7px 15px;min-height:36px;font-size:15px;font-weight:500}
+html.ios .chip.on{background:var(--tx);color:var(--bg);font-weight:600}
+html.ios .chip.on small{color:var(--bg)}
+html.ios .pill{border-radius:6px;font-weight:600;font-size:12px;padding:3px 7px}
+/* Campos: buscador gris redondeado; campos de formulario blancos sin borde */
+html.ios input,html.ios select,html.ios textarea{border:0;border-radius:10px;background-color:var(--card);font-size:17px;padding:12px 14px}
+html.ios input:focus,html.ios textarea:focus,html.ios select:focus{outline:2px solid var(--pri);outline-offset:0}
+html.ios .buscar{background-color:var(--relleno);padding:9px 12px 9px 36px;border-radius:10px;background-position:11px center;background-size:17px}
+html.ios .lista-scroll{border:0;border-radius:12px}
+/* Inicio: accesos como «widgets» con ícono en un cuadrito de color */
+html.ios .grande{border:0;border-radius:16px;background:var(--card);padding:14px;font-size:17px;font-weight:600;gap:12px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+html.ios .grande .i{width:38px;height:38px;padding:8px;border-radius:10px;background:var(--pri);color:#fff;stroke-width:2}
+html.ios .grande.pri{background:linear-gradient(140deg,#B23A86 0%,#8E2468 55%,#6A1B4D 100%);color:#fff;padding:18px 16px;font-size:20px;box-shadow:0 8px 24px rgba(142,36,104,.28)}
+html.ios .grande.pri .i{background:rgba(255,255,255,.22);color:#fff;width:44px;height:44px;padding:9px}
+html.ios .h-acc .g2 .grande:first-child .i{background:#FF9500}
+html.ios .h-acc .g2 .grande:last-child .i{background:#34C759}
+html.ios .grande:active{transform:scale(.97);transition:none}
+html.ios .res{border:0;border-radius:16px;background:var(--card);padding:12px 14px}
+html.ios .res .i{width:20px;height:20px}
+html.ios .res span{font-size:13px;font-weight:600;color:var(--tx2)}
+html.ios .res b,html.ios .tot.big{font-family:ui-rounded,"SF Pro Rounded",-apple-system,system-ui,sans-serif}
+html.ios .res b{font-size:clamp(20px,5.4vw,26px);font-weight:700;letter-spacing:-.02em}
+html.ios .warn,html.ios .note{border-radius:12px}
+/* Estante de fotos, como en la App Store / Música */
+.estante{display:none}
+html.ios .estante{display:block;grid-column:1/-1}
+.estante .fila-h{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:0 16px;padding:2px 16px 8px;margin:0 -16px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.estante .fila-h::-webkit-scrollbar{display:none}
+.estante .tile{flex:none;width:138px;scroll-snap-align:start;border:0;background:transparent;padding:0;text-align:left;color:var(--tx);cursor:pointer;transition:transform .2s cubic-bezier(.32,.72,0,1)}
+.estante .tile:active{transform:scale(.96);transition:none}
+.estante .tile .thumb{width:138px;height:138px;border-radius:12px;margin-bottom:7px;display:flex;box-shadow:0 0 0 .5px rgba(0,0,0,.06)}
+.estante .tile .thumb.vacia .i{width:40px;height:40px}
+.estante .tile b{display:block;font-size:15px;font-weight:500;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.estante .tile span{display:block;font-size:13px;color:var(--tx2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.estante .cab{display:flex;align-items:baseline;justify-content:space-between}
+.estante .cab button{background:none;border:0;color:var(--pri);font-size:17px;cursor:pointer;min-height:44px;padding:0 2px}
+/* Barra de abajo flotante de vidrio (iPhone actual) */
+html.ios .nav{left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));padding:5px;border-radius:999px;border:0;background:var(--vidrio2);-webkit-backdrop-filter:saturate(180%) blur(24px);backdrop-filter:saturate(180%) blur(24px);box-shadow:0 8px 30px rgba(0,0,0,.12),0 0 0 .5px rgba(0,0,0,.06),inset 0 .5px 0 rgba(255,255,255,.6);max-width:520px;margin:0 auto}
+html.ios .nav button{min-height:54px;border-radius:999px;font-size:10.5px;font-weight:600;letter-spacing:0;color:var(--tx);padding:6px 2px 5px;transition:background-color .3s cubic-bezier(.32,.72,0,1),color .2s ease}
+html.ios .nav button .i{width:25px;height:25px;margin-bottom:2px}
+html.ios .nav button.on{color:var(--pri);background:var(--relleno)}
+@media (max-width:899px){html.ios body:has(#pie .pie) .nav{display:none}}
+html.ios .pie{background:var(--vidrio);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-top:.5px solid var(--sep)}
+/* Hojas que suben desde abajo, con su «agarradera» */
+html.ios .velo{background:rgba(0,0,0,.28)}
+html.ios .modal{border-radius:22px 22px 0 0;padding-top:24px;position:relative;animation:sube .5s cubic-bezier(.32,.72,0,1)}
+html.ios .modal::before{content:'';position:absolute;top:8px;left:50%;width:36px;height:5px;margin-left:-18px;border-radius:3px;background:var(--bd2)}
+/* Avisos como la «isla» de arriba del iPhone */
+html.ios .toast{background:#000;color:#fff;border-radius:999px;padding:11px 18px;font-weight:600;top:calc(10px + env(safe-area-inset-top));box-shadow:0 10px 30px rgba(0,0,0,.25);animation:isla .45s cubic-bezier(.32,.72,0,1)}
+@keyframes isla{from{opacity:0;transform:translate(-50%,-8px) scale(.6)}}
+html.ios .guardando{background:#000;color:#fff;border-radius:999px}
+html.ios .check{border-width:1.5px}
+html.ios .check.on{background:var(--pri);border-color:var(--pri)}
+html.ios table.t th{background:var(--card);color:var(--tx2);font-size:12px;text-transform:uppercase;letter-spacing:.02em;border-bottom:.5px solid var(--sep)}
+html.ios .tabla-wrap{border:0}
+html.ios .ib[aria-label=Volver],html.ios .ib[aria-label="Paso anterior"],html.ios .ib[aria-label^="Salir"]{color:var(--pri)}
+/* Movimiento: empujar (entra desde la derecha) y volver */
+.capa-vieja{position:fixed;inset:0;z-index:3;overflow:hidden;pointer-events:none}
+.capa-vieja>main{background:var(--bg)}
+.capa-vieja.queda>main{animation:ap-se-corre .44s cubic-bezier(.32,.72,0,1) forwards}
+.capa-vieja.sale{z-index:5}.capa-vieja.sale>main{box-shadow:-10px 0 30px rgba(0,0,0,.12);animation:ap-se-va .44s cubic-bezier(.32,.72,0,1) forwards}
+main.ap-entra{animation:ap-entra .44s cubic-bezier(.32,.72,0,1);box-shadow:-10px 0 30px rgba(0,0,0,.10);background:var(--bg);position:relative;z-index:4}
+main.ap-vuelve{animation:ap-vuelve .44s cubic-bezier(.32,.72,0,1)}
+main.ap-funde{animation:fade .2s ease-out}
+@keyframes ap-entra{from{transform:translateX(100%)}}
+@keyframes ap-vuelve{from{transform:translateX(-30%);opacity:.7}}
+@keyframes ap-se-corre{to{transform:translateX(-30%);opacity:.6}}
+@keyframes ap-se-va{to{transform:translateX(100%)}}
+@media (prefers-reduced-transparency:reduce){html.ios .top,html.ios .nav,html.ios .pie{background:var(--card);-webkit-backdrop-filter:none;backdrop-filter:none}}
+@media (hover:hover) and (pointer:fine){
+ html.ios .fila:hover{background:var(--relleno)}
+ html.ios .btn:hover{filter:brightness(1.08)}
+ html.ios .btn2:hover{filter:brightness(.97)}
+ html.ios .grande:not(.pri):hover{background:var(--card);box-shadow:0 4px 14px rgba(0,0,0,.08)}
+ html.ios .chip:not(.on):hover{background:var(--toque)}
+}
+/* Computadora = Mac: barra lateral translúcida, barra de título, tarjetas con borde finito */
+@media (min-width:900px){
+ html.ios body{font-size:15px}
+ html.ios .nav{top:0;bottom:0;left:0;right:auto;width:220px;margin:0;max-width:none;border-radius:0;padding:62px 10px 10px;background:var(--vidrio);box-shadow:none;border-right:.5px solid var(--sep);gap:2px}
+ html.ios .nav button{min-height:0;border-radius:8px;font-size:15px;font-weight:500;color:var(--tx);padding:8px 10px;gap:10px}
+ html.ios .nav button .i{width:20px;height:20px;color:var(--pri);margin:0}
+ html.ios .nav button.on{background:var(--relleno);color:var(--tx);font-weight:600}
+ html.ios .top{padding-left:234px;min-height:52px}
+ html.ios .top h1{position:static;transform:none;opacity:1;text-align:left;max-width:none;font-size:15px;font-weight:700}
+ html.ios main{margin-left:220px;padding-top:18px}
+ html.ios .gran-titulo{font-size:28px;margin-bottom:12px}
+ html.ios .card,html.ios .grande:not(.pri),html.ios .res{box-shadow:0 0 0 .5px rgba(0,0,0,.08),0 1px 3px rgba(0,0,0,.05)}
+ html.ios .btn{border-radius:10px;padding:12px;font-size:15px}
+ html.ios .btn2{border-radius:8px;font-size:15px}
+ html.ios .pie{left:220px}
+ html.ios .modal{border-radius:14px;padding-top:18px;animation:aparece .25s cubic-bezier(.32,.72,0,1);box-shadow:0 0 0 .5px rgba(0,0,0,.1),0 24px 60px rgba(0,0,0,.28)}
+ html.ios .modal::before{display:none}
+ html.ios .estante{grid-row:4}
+ html.ios .inicio{grid-template-rows:auto auto 1fr}
+ .estante .tile{width:160px}.estante .tile .thumb{width:160px;height:160px}
+ .estante .fila-h{margin:0;padding:2px 0 8px}
+}
+@media (min-width:900px) and (prefers-color-scheme:dark){html.ios .card,html.ios .grande:not(.pri),html.ios .res{box-shadow:0 0 0 .5px rgba(255,255,255,.08)}}
+/* ═════ ESTILO DEGRADADO (como el widget «Cambio del dólar»): oscuro, luz de color en las esquinas, bordes de acento ═════ */
+html.ios.grad{color-scheme:dark;--bg:#151314;--card:rgba(255,255,255,.055);--tx:#F4EFEA;--tx2:rgba(244,239,234,.62);--bd:rgba(255,255,255,.08);--bd2:rgba(255,255,255,.16);--sep:rgba(255,255,255,.08);--onpri:#1A0F08;--relleno:rgba(255,255,255,.07);--toque:rgba(255,255,255,.10);--vidrio:rgba(21,19,20,.62);--vidrio2:rgba(36,32,33,.72);--ok:#6EE7A0;--okbg:rgba(110,231,160,.14);--wa:#FFC56B;--wabg:rgba(255,197,107,.14);--er:#FF7A7A;--erbg:rgba(255,122,122,.14);--bl:#8AB4FF;--blbg:rgba(138,180,255,.14);--gr:rgba(244,239,234,.6);--grbg:rgba(255,255,255,.07);--foco:var(--pri)}
+html.ios[data-tema=vino]{--pri:#F08CC4;--pri2:#8E2468;--ac:#F08CC4;--acbg:rgba(240,140,196,.13);--acsol:rgba(240,140,196,.13);--luz1:rgba(170,50,120,.50);--luz2:rgba(90,30,110,.50)}
+html.ios.grad{background:radial-gradient(90% 55% at 0% 0%,var(--luz1),transparent 70%) fixed,radial-gradient(80% 55% at 100% 100%,var(--luz2),transparent 70%) fixed,linear-gradient(160deg,#1E1B1C,#141213 55%,#181415) fixed;background-color:#151314;min-height:100%}
+html.ios.grad body{background:transparent}
+html.ios.grad .estante .tile .thumb{width:138px;height:138px;border-radius:16px;box-shadow:0 0 0 1.5px var(--bd)}
+html.ios.grad .fila:has(.check.on){border-color:var(--pri);background:var(--acbg)}
+html.ios.grad .estante .tile b{font-weight:700}
+@media (min-width:900px){html.ios.grad .estante .tile .thumb{width:160px;height:160px}}
+html.ios.grad,html.ios.grad body{font-family:"Segoe UI Variable Text","Segoe UI",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;letter-spacing:0}
+/* Cabecera: logo redondo de color + nombre siempre visible + estado con puntito */
+html.ios.grad .top{background:rgba(21,19,20,.45);border-bottom:1px solid var(--sep)}
+html.ios.grad .top h1{position:static;transform:none;opacity:1;text-align:left;max-width:none;font-size:18px;font-weight:700;display:flex;align-items:center;gap:10px;padding-left:4px}
+html.ios.grad .top h1::before{content:'';flex:none;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 50% 50%,#fff 0 3px,transparent 3.5px),linear-gradient(135deg,var(--pri),var(--pri2));box-shadow:0 0 0 3px rgba(255,255,255,.06)}
+html.ios.grad #estado-cola{background:transparent!important;color:var(--tx2)!important;font-weight:500;padding:5px 6px}
+html.ios.grad #estado-cola .i{color:var(--pri)}
+html.ios.grad .top .ib{color:var(--tx2)}
+/* Títulos y etiquetas tipo píldora */
+html.ios.grad .gran-titulo{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:6px 2px 16px}
+html.ios.grad .fecha-mini{display:inline-flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:14px;font-weight:500;color:var(--tx2);margin:6px 2px 4px}
+html.ios.grad .fecha-mini::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--pri)}
+html.ios.grad h2,html.ios.grad .l,html.ios.grad .paso{display:inline-block;font-size:12.5px!important;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--pri)!important;background:var(--acbg);padding:6px 13px;border-radius:999px;border:0;margin:20px 0 10px}
+html.ios.grad .h-hoy .card>.row:first-child{padding:0 0 4px!important}
+html.ios.grad .h-hoy .card>.row:first-child h2{margin:0}
+html.ios.grad .mut{color:var(--tx2)}
+/* Tarjetas: oscuras translúcidas; la elegida, con borde de color */
+html.ios.grad .card{background:transparent;padding:0!important;box-shadow:none!important;border-radius:0}
+html.ios.grad .fila{background:var(--card);border:1.5px solid var(--bd);border-radius:14px;margin:0 0 9px;padding:12px 14px;transition:border-color .2s ease,background-color .2s ease,transform .15s ease}
+html.ios.grad .fila::after{display:none}
+html.ios.grad .fila:active{border-color:var(--pri);background:var(--acbg);transform:scale(.985)}
+html.ios.grad .fila .b{font-weight:700;font-size:16.5px}
+html.ios.grad .badge{width:20px;height:20px;border-radius:50%;background:transparent!important;border:2px solid rgba(255,255,255,.35);margin:0 2px}
+html.ios.grad .badge .i{display:none}
+html.ios.grad .badge.b-Atrasado{border-color:var(--er);background:radial-gradient(circle,var(--er) 0 4px,transparent 4.5px)!important}
+html.ios.grad .badge.b-Entregado{border-color:var(--pri);background:radial-gradient(circle,var(--pri) 0 4px,transparent 4.5px)!important}
+html.ios.grad .fila:has(.b-Atrasado){border-color:rgba(255,122,122,.45)}
+html.ios.grad .thumb{border-radius:10px;width:48px;height:48px;box-shadow:0 0 0 1px rgba(255,255,255,.08)}
+html.ios.grad .h-hoy .card>div[style*="border-top"]{border-top:1px solid var(--sep)!important;padding:12px 4px 0!important;color:var(--tx2)}
+/* Accesos de Inicio */
+html.ios.grad .grande{background:var(--card);border:1.5px solid var(--bd);border-radius:16px;box-shadow:none;font-weight:700}
+html.ios.grad .grande .i{background:var(--acbg);color:var(--pri);border-radius:50%}
+html.ios.grad .grande.pri{background:linear-gradient(120deg,var(--pri),var(--pri2));border:0;color:#fff;box-shadow:0 10px 30px -8px var(--pri2);text-shadow:0 1px 2px rgba(0,0,0,.2)}
+html.ios.grad .grande.pri .i{background:rgba(255,255,255,.22);color:#fff}
+html.ios.grad .h-acc .g2 .grande .i{background:var(--acbg)!important;color:var(--pri)}
+html.ios.grad .grande:active{border-color:var(--pri);transform:scale(.97)}
+/* Resumen con números grandes en el color de acento */
+html.ios.grad .res{background:var(--card);border:1.5px solid var(--bd);border-radius:16px;box-shadow:none!important}
+html.ios.grad .res b{font-family:inherit;font-weight:800;color:var(--pri);font-size:clamp(21px,5.6vw,27px)}
+html.ios.grad .res .i{color:var(--tx2)}
+html.ios.grad .res span{color:var(--tx2);font-weight:500}
+/* Botones: principal con degradado; secundarios con borde */
+html.ios.grad .btn{background:linear-gradient(120deg,var(--pri),var(--pri2));color:#fff;border:0;border-radius:14px;font-weight:700;box-shadow:0 8px 24px -10px var(--pri2);text-shadow:0 1px 2px rgba(0,0,0,.2)}
+html.ios.grad .btn:disabled,html.ios.grad .btn[disabled]{opacity:.45;box-shadow:none}
+html.ios.grad .btn2{background:transparent;color:var(--tx);border:1.5px solid var(--bd2);border-radius:12px;font-weight:600}
+html.ios.grad .btn2.sm{border-color:var(--pri);color:var(--pri)}
+html.ios.grad .btn2.er{border-color:rgba(255,122,122,.5);color:var(--er);background:transparent}
+html.ios.grad .chip{background:transparent;border:1.5px solid var(--bd2);color:var(--tx);border-radius:12px;font-weight:600}
+html.ios.grad .chip.on{background:var(--acbg);border-color:var(--pri);color:var(--pri)}
+html.ios.grad .chip.on small{color:var(--pri)}
+html.ios.grad .pill{border-radius:999px}
+/* Campos con borde que se ilumina */
+html.ios.grad input,html.ios.grad select,html.ios.grad textarea{background-color:rgba(255,255,255,.06);border:1.5px solid var(--bd2);border-radius:14px;color:var(--tx)}
+html.ios.grad input:focus,html.ios.grad textarea:focus,html.ios.grad select:focus{outline:0;border-color:var(--pri);box-shadow:0 0 0 4px var(--acbg)}
+html.ios.grad .buscar{background-color:rgba(255,255,255,.06);border-radius:14px}
+html.ios.grad .check{border-color:rgba(255,255,255,.35);border-radius:50%}
+html.ios.grad .check.on{background:var(--pri);border-color:var(--pri);color:var(--onpri)}
+html.ios.grad .lista-scroll{background:transparent}
+html.ios.grad .barra{background:rgba(255,255,255,.1)}html.ios.grad .barra div{background:linear-gradient(90deg,var(--pri),var(--pri2))}
+html.ios.grad .warn,html.ios.grad .note{background:var(--card);border:1.5px solid var(--bd)}
+html.ios.grad .foto-grande{border-radius:18px;box-shadow:0 0 0 1.5px var(--bd)}
+/* Barra de abajo y pie: vidrio oscuro; activo en color */
+html.ios.grad .nav{background:rgba(30,27,28,.72);box-shadow:0 10px 30px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.07)}
+html.ios.grad .nav button{color:var(--tx2)}
+html.ios.grad .nav button.on{color:var(--pri);background:var(--acbg)}
+html.ios.grad .pie{background:rgba(21,19,20,.7);border-top:1px solid var(--sep)}
+html.ios.grad .modal{background:#221F20;border:1px solid var(--bd)}
+html.ios.grad .toast{background:#2A2627;color:var(--tx);border:1.5px solid var(--pri)}
+html.ios.grad table.t th{background:rgba(255,255,255,.04);color:var(--pri)}
+@media (min-width:900px){
+ html.ios.grad .nav{background:rgba(20,18,19,.55);border-right:1px solid var(--sep);box-shadow:none}
+ html.ios.grad .nav button{color:var(--tx);border:1.5px solid transparent}
+ html.ios.grad .nav button .i{color:var(--tx2)}
+ html.ios.grad .nav button.on{border-color:var(--pri);background:var(--acbg);color:var(--pri)}html.ios.grad .nav button.on .i{color:var(--pri)}
+ html.ios.grad .top{padding-left:234px}
+ html.ios.grad .card,html.ios.grad .grande:not(.pri),html.ios.grad .res{box-shadow:none!important}
+}
+/* Ciruela de DÍA: el mismo estilo con fondo claro (cambia solo según el modo del equipo) */
+@media (prefers-color-scheme:light){
+ html.ios[data-tema=vino]{color-scheme:light;--bg:#FBF6F9;--card:rgba(255,255,255,.72);--tx:#2A1222;--tx2:#7A6170;--bd:rgba(142,36,104,.12);--bd2:rgba(142,36,104,.22);--sep:rgba(142,36,104,.10);--pri:#9B2C73;--pri2:#D45BA0;--onpri:#FFFFFF;--ac:#9B2C73;--acbg:rgba(155,44,115,.09);--acsol:rgba(155,44,115,.09);--relleno:rgba(142,36,104,.06);--toque:rgba(142,36,104,.10);--luz1:rgba(240,140,196,.45);--luz2:rgba(190,150,230,.40);--ok:#1E7F4A;--okbg:rgba(30,127,74,.10);--wa:#9A5B00;--wabg:rgba(200,130,0,.12);--er:#C62828;--erbg:rgba(198,40,40,.09);--bl:#1D4ED8;--blbg:rgba(29,78,216,.09);--gr:#7A6170;--grbg:rgba(142,36,104,.06)}
+ html.ios[data-tema=vino]{background:radial-gradient(90% 55% at 0% 0%,var(--luz1),transparent 70%) fixed,radial-gradient(80% 55% at 100% 100%,var(--luz2),transparent 70%) fixed,linear-gradient(160deg,#FFFFFF,#FBF6F9 55%,#F7EEF5) fixed;background-color:#FBF6F9}
+ html.ios[data-tema=vino] .top{background:rgba(255,255,255,.55)}
+ html.ios[data-tema=vino] .top h1::before{background:radial-gradient(circle at 50% 50%,#fff 0 3px,transparent 3.5px),linear-gradient(135deg,#D45BA0,#8E2468);box-shadow:0 0 0 3px rgba(155,44,115,.10)}
+ html.ios[data-tema=vino] .grande.pri,html.ios[data-tema=vino] .btn{background:linear-gradient(120deg,#D45BA0,#8E2468);box-shadow:0 10px 26px -10px rgba(142,36,104,.7)}
+ html.ios[data-tema=vino] .badge{border-color:rgba(142,36,104,.35)}
+ html.ios[data-tema=vino] .check{border-color:rgba(142,36,104,.35)}
+ html.ios[data-tema=vino] .thumb{box-shadow:0 0 0 1px rgba(142,36,104,.10)}
+ html.ios[data-tema=vino] .fila,html.ios[data-tema=vino] .grande:not(.pri),html.ios[data-tema=vino] .res{box-shadow:0 1px 3px rgba(120,30,90,.05)!important}
+ html.ios[data-tema=vino] input,html.ios[data-tema=vino] select,html.ios[data-tema=vino] textarea,html.ios[data-tema=vino] .buscar{background-color:rgba(255,255,255,.8)}
+ html.ios[data-tema=vino] .barra{background:rgba(142,36,104,.10)}
+ html.ios[data-tema=vino] .nav{background:rgba(255,255,255,.72);box-shadow:0 10px 30px rgba(120,30,90,.14),inset 0 0 0 1px rgba(142,36,104,.08)}
+ html.ios[data-tema=vino] .pie{background:rgba(255,255,255,.75)}
+ html.ios[data-tema=vino] .modal{background:#FFFFFF}
+ html.ios[data-tema=vino] .toast{background:#FFFFFF;color:var(--tx);box-shadow:0 10px 30px rgba(120,30,90,.18)}
+ html.ios[data-tema=vino] table.t th{background:rgba(142,36,104,.05)}
+ html.ios[data-tema=vino] .estante .tile .thumb,html.ios[data-tema=vino] .foto-grande{box-shadow:0 6px 18px rgba(120,30,90,.12)}
+ html.ios[data-tema=vino] .velo{background:rgba(42,18,34,.30)}
+}
+@media (prefers-color-scheme:light) and (min-width:900px){html.ios[data-tema=vino] .nav{background:rgba(255,255,255,.5);box-shadow:none}}
+/* Barra lateral (computadora) más visible: marca, botón «Nuevo alquiler», íconos en cuadritos y la sección activa con degradado */
+.nav-marca,.nav-l,.nav-n{display:none}.nav-ic,.nav-tx{display:contents}
+@media (min-width:900px){
+ html.ios.grad .nav{width:248px;padding:18px 14px;gap:4px;background:linear-gradient(180deg,rgba(48,18,38,.82),rgba(22,15,20,.82));border-right:1px solid var(--bd);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+ html.ios.grad .nav-marca{display:flex;align-items:center;gap:11px;padding:4px 6px 20px;font-size:17px;font-weight:800;letter-spacing:-.01em;color:var(--tx)}
+ html.ios.grad .nav-logo{flex:none;width:34px;height:34px;border-radius:50%;background:radial-gradient(circle,#fff 0 3.5px,transparent 4px),linear-gradient(135deg,#F08CC4,#8E2468);box-shadow:0 0 0 3px var(--acbg),0 6px 16px -4px rgba(212,91,160,.6)}
+ html.ios.grad .nav-l{display:block;font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--tx2);padding:0 8px 8px}
+ html.ios.grad .nav button{display:flex;flex-direction:row;align-items:center;gap:12px;min-height:52px;padding:8px 10px;border-radius:14px;border:1.5px solid transparent;font-size:16px;font-weight:700;color:var(--tx);background:transparent;transition:background-color .2s ease,border-color .2s ease,box-shadow .2s ease}
+ html.ios.grad .nav-ic{display:flex;flex:none;width:36px;height:36px;border-radius:11px;align-items:center;justify-content:center;background:var(--acbg);color:var(--pri);transition:background-color .2s ease,color .2s ease}
+ html.ios.grad .nav button .nav-ic .i{width:20px;height:20px;margin:0;color:inherit;stroke-width:2}
+ html.ios.grad .nav-tx{display:block;flex:1;text-align:left}
+ html.ios.grad .nav-n{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 7px;border-radius:999px;background:var(--er);color:#fff;font-size:12.5px;font-weight:800}
+ html.ios.grad .nav button:not(.on):hover{background:var(--relleno);border-color:var(--bd)}
+ html.ios.grad .nav button.on{background:linear-gradient(120deg,rgba(212,91,160,.95),rgba(142,36,104,.95));border-color:transparent;color:#fff;box-shadow:0 10px 26px -12px rgba(212,91,160,.9)}
+ html.ios.grad .nav button.on .nav-ic{background:rgba(255,255,255,.2);color:#fff}
+ html.ios.grad .nav button.on .nav-n{background:#fff;color:#8E2468}
+ html.ios.grad .top{padding-left:268px}
+ html.ios.grad .top h1{visibility:hidden}
+ html.ios.grad main{margin-left:248px}
+ html.ios.grad .pie{left:248px}
+}
+@media (min-width:900px) and (prefers-color-scheme:light){
+ html.ios[data-tema=vino] .nav{background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(250,238,246,.82));border-right:1px solid var(--bd)}
+}
+/* Ajustes finos del degradado: estados con ícono (no parecen botones de elegir), deuda en ámbar, menos rojo, títulos más tranquilos */
+html.ios.grad .badge{width:38px;height:38px;border-radius:50%;border:0;margin:0;background:var(--acbg)!important;color:var(--pri)}
+html.ios.grad .badge .i{display:block;width:19px;height:19px}
+html.ios.grad .badge.b-Entregado{background:var(--blbg)!important;color:var(--bl)}
+html.ios.grad .badge.b-Atrasado{background:var(--erbg)!important;color:var(--er)}
+html.ios.grad .badge.b-Devuelto{background:var(--okbg)!important;color:var(--ok)}
+html.ios.grad .badge.b-Anulado{background:var(--grbg)!important;color:var(--gr)}
+html.ios.grad .er-t{color:var(--wa)!important;font-weight:600}
+html.ios.grad .fila:has(.b-Atrasado){border-color:var(--bd);box-shadow:inset 3px 0 0 var(--er)!important}
+html.ios.grad h2{display:block;background:none;padding:0;color:var(--tx)!important;text-transform:none;letter-spacing:-.01em;font-size:17px!important;font-weight:700;margin:24px 2px 10px}
+html.ios.grad .h-hoy h2,html.ios.grad .estante h2{display:inline-flex;align-items:center;gap:8px;font-size:12.5px!important;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--pri)!important;background:var(--acbg);padding:6px 13px;border-radius:999px}
+html.ios.grad .h2n{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--pri);color:var(--onpri);font-size:11.5px;letter-spacing:0}
+html.ios.grad .l{display:block;background:none;padding:0;font-size:12px!important;font-weight:700;letter-spacing:.06em;color:var(--tx2)!important;margin:20px 4px 8px}
+html.ios.grad .buscar,html.ios.grad .btn2.sm{min-height:48px}
+html.ios.grad .grande.pri{box-shadow:0 10px 24px -14px var(--pri2)}
+html.ios.grad .btn{box-shadow:0 8px 20px -12px var(--pri2)}
+html.ios.grad .pill{font-weight:600}
+/* ═════ Pulido con las reglas de Apple (HIG) ═════ */
+/* Rendimiento: la luz de las esquinas va en una capa fija propia (no se repinta al desplazar y funciona en iPhone) */
+html.ios.grad{background:#151314}
+html.ios.grad body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(90% 55% at 0% 0%,var(--luz1),transparent 70%),radial-gradient(80% 55% at 100% 100%,var(--luz2),transparent 70%),linear-gradient(160deg,#1E1B1C,#141213 55%,#181415);transform:translateZ(0)}
+@media (prefers-color-scheme:light){html.ios[data-tema=vino]{background:#FBF6F9}html.ios[data-tema=vino] body::before{background:radial-gradient(90% 55% at 0% 0%,var(--luz1),transparent 70%),radial-gradient(80% 55% at 100% 100%,var(--luz2),transparent 70%),linear-gradient(160deg,#FFFFFF,#FBF6F9 55%,#F7EEF5)}}
+/* Contraste AA: el texto blanco va sobre tonos más profundos del degradado */
+html.ios[data-tema=vino]{--g1:#C2448F;--g2:#7E1F5C}html.ios.grad .btn,html.ios.grad .grande.pri,html.ios.grad .nav button.on,html.ios.grad .nav-logo{background:linear-gradient(120deg,var(--g1),var(--g2))!important}
+html.ios.grad .barra div{background:linear-gradient(90deg,var(--g1),var(--pri))}
+/* Tipografía con la escala de Apple: título 34, encabezado 17 seminegrita, cuerpo 17, secundario 15; cifras alineadas */
+html.ios.grad body{font-size:17px;font-variant-numeric:tabular-nums}
+html.ios.grad .gran-titulo{font-size:34px;line-height:1.1;letter-spacing:-.022em}
+html.ios.grad .fila .b{font-size:17px;font-weight:600;letter-spacing:-.01em}
+html.ios.grad .fila .mut{font-size:15px}
+html.ios.grad .grande,html.ios.grad .btn{font-weight:600;letter-spacing:-.01em}
+/* Tamaño mínimo táctil de Apple: 44 puntos */
+html.ios.grad .chip{min-height:44px;padding:8px 16px}
+html.ios.grad .estante .cab button,html.ios.grad .ib{min-height:44px;min-width:44px}
+/* Esquinas continuas tipo «squircle» de Apple donde el navegador lo permita */
+@supports (corner-shape:squircle){html.ios.grad .fila,html.ios.grad .grande,html.ios.grad .res,html.ios.grad .btn,html.ios.grad .btn2,html.ios.grad input,html.ios.grad .buscar,html.ios.grad .nav-ic,html.ios.grad .thumb,html.ios.grad .estante .tile .thumb,html.ios.grad .modal,html.ios.grad .foto-grande{corner-shape:squircle}
+ html.ios.grad .fila,html.ios.grad .grande,html.ios.grad .res{border-radius:26px}html.ios.grad .btn,html.ios.grad input,html.ios.grad .buscar{border-radius:24px}html.ios.grad .thumb{border-radius:18px}html.ios.grad .estante .tile .thumb{border-radius:30px}html.ios.grad .nav-ic{border-radius:20px}}
+/* Al tocar: respuesta inmediata al apoyar el dedo; al soltar vuelve con suavidad */
+html.ios.grad .fila,html.ios.grad .grande,html.ios.grad .btn,html.ios.grad .btn2,html.ios.grad .chip,html.ios.grad .estante .tile{transition:transform .32s cubic-bezier(.32,.72,0,1),background-color .2s ease,border-color .2s ease}
+html.ios.grad .fila:active,html.ios.grad .grande:active,html.ios.grad .btn:active,html.ios.grad .btn2:active,html.ios.grad .chip:active,html.ios.grad .estante .tile:active{transform:scale(.97);transition:transform .08s ease-out}
+/* Hoja: sale por donde entró */
+@keyframes hoja-sale{to{transform:translateY(100%)}}@keyframes velo-sale{to{background-color:rgba(0,0,0,0)}}
+html.ios .velo.saliendo{animation:velo-sale .26s ease forwards}html.ios .velo.saliendo .modal-sale{animation:hoja-sale .26s cubic-bezier(.32,.72,0,1) forwards}
+@media (min-width:900px){@keyframes hoja-sale-mac{to{opacity:0;transform:scale(.96)}}html.ios .velo.saliendo .modal-sale{animation:hoja-sale-mac .18s ease forwards}}
+html.ios.grad .modal{touch-action:pan-y}
+/* Foco de teclado visible (Mac) */
+html.ios.grad :focus-visible{outline:2.5px solid var(--pri);outline-offset:3px;border-radius:12px}
+/* Cambio día/noche suave, sin golpe de brillo */
+html.ios.grad body,html.ios.grad .fila,html.ios.grad .grande,html.ios.grad .res,html.ios.grad .top,html.ios.grad .nav{transition-property:transform,background-color,border-color,color;transition-duration:.32s,.3s,.3s,.3s}
+/* Privacidad al cambiar de app */
+html.oculto main,html.oculto #capa{filter:blur(22px);transition:none}
+/* Accesibilidad de Apple: menos transparencia y más contraste */
+@media (prefers-reduced-transparency:reduce){html.ios.grad .top,html.ios.grad .nav,html.ios.grad .pie{background:var(--bg)!important;-webkit-backdrop-filter:none;backdrop-filter:none}html.ios.grad .fila,html.ios.grad .grande,html.ios.grad .res{background:color-mix(in srgb,var(--bg) 88%,var(--tx))}}
+@media (prefers-contrast:more){html.ios.grad{--bd:rgba(255,255,255,.34);--bd2:rgba(255,255,255,.5);--tx2:rgba(244,239,234,.85)}html.ios[data-tema=vino]{--bd:rgba(142,36,104,.45);--bd2:rgba(142,36,104,.6);--tx2:#4E3A47}}
+@media (prefers-reduced-motion:reduce){html.ios.grad .fila,html.ios.grad .grande,html.ios.grad .btn{transition:background-color .2s ease}html.ios.grad .fila:active,html.ios.grad .grande:active,html.ios.grad .btn:active{transform:none}}
+/* ═════ Filtros con color propio + «luz» que se desliza ═════ */
+html.ios.grad .filtros{position:relative;display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;scrollbar-width:none;margin-top:12px;padding:2px 1px 4px;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 24px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 24px),transparent)}
+html.ios.grad .filtros::-webkit-scrollbar{display:none}
+html.ios.grad .filtros .chip{position:relative;z-index:1;flex:none;display:inline-flex;align-items:center;gap:7px;transition:color .25s ease,background-color .25s ease,border-color .25s ease,transform .3s cubic-bezier(.32,.72,0,1)}
+html.ios.grad .filtros .chip .i{width:17px;height:17px;flex:none}
+html.ios.grad .cn{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 7px;border-radius:999px;font-size:12.5px;font-weight:700;background:var(--relleno);color:var(--tx2);transition:background-color .25s ease,color .25s ease}
+html.ios.grad .luz{position:absolute;left:0;top:0;z-index:0;pointer-events:none;opacity:0;border-radius:999px;background-color:var(--lc,var(--pri));transition:transform .48s cubic-bezier(.32,.72,0,1),width .48s cubic-bezier(.32,.72,0,1),height .3s ease,background-color .3s ease,opacity .2s ease}
+html.ios.grad .filtros-mas{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 4px}
+html.ios.grad .filtros-mas select{width:auto!important;min-height:44px;border-radius:999px!important;font-size:14px;padding:6px 30px 6px 14px!important;background-color:transparent}
+/* colores por estado */
+html.ios.grad .cf{--c:var(--pri);--cb:var(--acbg);--cs:var(--g1);--ct:#fff}
+html.ios.grad .cf[data-v=Atrasados]{--c:var(--er);--cb:var(--erbg);--cs:#E5484D;--ct:#fff}
+html.ios.grad .cf[data-v="Te deben"],html.ios.grad .cf[data-v="Reparación"]{--c:var(--wa);--cb:var(--wabg);--cs:#F2A93B;--ct:#2A1800}
+html.ios.grad .cf[data-v=Todos]{--c:var(--tx);--cb:var(--relleno);--cs:var(--tx);--ct:var(--bg)}
+html.ios.grad .cf[data-v=Disponible]{--c:var(--ok);--cb:var(--okbg);--cs:#2A9D5F;--ct:#fff}
+html.ios.grad .cf[data-v=Alquilada],html.ios.grad .cf[data-v="Lavandería"]{--c:var(--bl);--cb:var(--blbg);--cs:#3F7FEA;--ct:#fff}
+html.ios.grad .cf[data-v=Baja]{--c:var(--gr);--cb:var(--grbg);--cs:#8A8A8E;--ct:#fff}
+
+/* V3 · Bancos / semáforo: cada filtro con su color; el elegido se rellena con ese color */
+html.ios.grad .filtros .chip{background:var(--cb);border:0;color:var(--c);font-weight:700;padding:8px 13px;gap:6px}html.ios.grad .filtros .chip .i{width:15px;height:15px}
+html.ios.grad .filtros .cn{background:var(--c);color:var(--bg)}
+html.ios.grad .filtros .chip.on{background:transparent;color:var(--ct)}
+html.ios.grad .filtros .chip.on .cn{background:rgba(255,255,255,.92);color:var(--cs)}
+html.ios.grad .filtros .chip[data-v=Todos].on .cn{background:var(--bg);color:var(--tx)}
+
+/* Lista por secciones con encabezado fijo (como los movimientos del banco) */
+html.ios.grad .grupo{margin-bottom:6px}
+html.ios.grad .grupo-cab{position:sticky;top:calc(52px + env(safe-area-inset-top));z-index:2;display:flex;align-items:center;gap:8px;padding:12px 4px 8px;font-size:12.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--tx2);background:linear-gradient(180deg,var(--bg) 70%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+html.ios.grad .grupo-cab b{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--relleno);color:var(--tx2);font-size:11.5px;letter-spacing:0}
+html.ios.grad .g-atr .grupo-cab{color:var(--er)}html.ios.grad .g-atr .grupo-cab b{background:var(--erbg);color:var(--er)}
+html.ios.grad .g-hoy .grupo-cab{color:var(--pri)}html.ios.grad .g-hoy .grupo-cab b{background:var(--acbg);color:var(--pri)}
+html.ios.grad .g-fin .fila{opacity:.75}
+@media (min-width:900px){html.ios.grad .grupo-cab{top:52px}}
+@media (prefers-reduced-motion:reduce){html.ios.grad .luz{transition:opacity .2s ease,background-color .2s ease}}
 </style>
 </head>
 <body>
@@ -262,7 +621,7 @@ table.t tfoot td{font-weight:700;background:var(--grbg);position:sticky;bottom:0
 <script type="application/json" id="datos0">null</script>
 
 <script>
-try { document.documentElement.setAttribute('data-tema', localStorage.getItem('alq_tema') || 'ciruela'); } catch (e) { }
+try { const t0 = localStorage.getItem('alq_tema') || 'ciruela'; document.documentElement.setAttribute('data-tema', t0); if (t0 === 'vino') document.documentElement.classList.add('ios', 'grad'); } catch (e) { }
 </script>
 <script>
 // Si algo falla al abrir, se muestra en pantalla (en vez de quedarse en "Cargando…").
@@ -433,12 +792,28 @@ function errCel(v) {
   return /^9\d{8}$/.test(d) ? '' : 'El celular tiene 9 números y empieza con 9 (escribiste ' + d.length + '). Sin él no se puede enviar WhatsApp.';
 }
 const IC = {"inicio": "<path d=\"M3 10.5 12 3l9 7.5\"/><path d=\"M5.5 9v11h13V9\"/><path d=\"M10 20v-6h4v6\"/>", "lista": "<rect x=\"5\" y=\"3\" width=\"14\" height=\"18\" rx=\"2.5\"/><path d=\"M9 8h6M9 12h6M9 16h3.5\"/>", "prendas": "<path d=\"M10 4.5a2 2 0 1 1 2 2v1.5\"/><path d=\"M12 8 3.6 14.6a1.4 1.4 0 0 0 .9 2.4h15a1.4 1.4 0 0 0 .9-2.4L12 8z\"/>", "mas": "<path d=\"M4 7h16M4 12h16M4 17h16\"/>", "mas2": "<circle cx=\"6\" cy=\"12\" r=\"1.2\"/><circle cx=\"12\" cy=\"12\" r=\"1.2\"/><circle cx=\"18\" cy=\"12\" r=\"1.2\"/>", "nuevo": "<path d=\"M12 5v14M5 12h14\"/>", "devolucion": "<path d=\"M9 14 4 9l5-5\"/><path d=\"M4 9h10.5a5.5 5.5 0 0 1 0 11H11\"/>", "cobrar": "<rect x=\"2.5\" y=\"6\" width=\"19\" height=\"12\" rx=\"2.5\"/><circle cx=\"12\" cy=\"12\" r=\"2.6\"/><path d=\"M6 9.5h.01M18 14.5h.01\"/>", "buscar": "<circle cx=\"11\" cy=\"11\" r=\"6.5\"/><path d=\"m20 20-4.2-4.2\"/>", "clientas": "<circle cx=\"9\" cy=\"8\" r=\"3.5\"/><path d=\"M2.5 20a6.5 6.5 0 0 1 13 0\"/><path d=\"M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14a6.5 6.5 0 0 1 3.5 6\"/>", "sheet": "<rect x=\"3\" y=\"4\" width=\"18\" height=\"16\" rx=\"2.5\"/><path d=\"M3 10h18M3 15h18M9 4v16\"/>", "respaldo": "<path d=\"M7 18a4.5 4.5 0 0 1-.6-9A6 6 0 0 1 18 8.5a4 4 0 0 1-.5 9.5\"/><path d=\"M12 12v8M9 15l3-3 3 3\"/>", "ajustes": "<path d=\"M4 7h9M17 7h3M4 17h3M11 17h9\"/><circle cx=\"15\" cy=\"7\" r=\"2\"/><circle cx=\"9\" cy=\"17\" r=\"2\"/>", "dni": "<rect x=\"2.5\" y=\"5\" width=\"19\" height=\"14\" rx=\"2.5\"/><circle cx=\"8.5\" cy=\"11\" r=\"2\"/><path d=\"M5.5 16a3 3 0 0 1 6 0M14 10h4.5M14 14h3\"/>", "vestido": "<path d=\"M9 3v3.2L7.5 9 10 11 6 20.5h12L14 11l2.5-2L15 6.2V3\"/><path d=\"M9 6.2h6\"/>", "mensaje": "<path d=\"M20 11.5a8 8 0 0 1-11.6 7.1L4 20l1.4-4.2A8 8 0 1 1 20 11.5z\"/>", "telefono": "<path d=\"M5 4h3.5l1.5 4-2 1.5a11 11 0 0 0 6.5 6.5l1.5-2 4 1.5V19a1.5 1.5 0 0 1-1.6 1.5A16 16 0 0 1 3.5 5.6 1.5 1.5 0 0 1 5 4z\"/>", "calendario": "<rect x=\"3.5\" y=\"5\" width=\"17\" height=\"15\" rx=\"2.5\"/><path d=\"M3.5 10h17M8 3v4M16 3v4\"/>", "nota": "<path d=\"M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z\"/>", "persona": "<circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4.5 20a7.5 7.5 0 0 1 15 0\"/>", "restaurar": "<path d=\"M4 12a8 8 0 1 0 2.4-5.7L4 8.5\"/><path d=\"M4 4v4.5h4.5\"/>", "anular": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"m9 9 6 6m0-6-6 6\"/>", "caja": "<path d=\"M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5z\"/><path d=\"M3.5 7.5 12 12l8.5-4.5M12 12v9\"/>", "reloj": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 7v5l3 2\"/>", "check": "<path d=\"m5 12.5 4.5 4.5L19 7.5\"/>", "tema": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 3a9 9 0 0 0 0 18z\"/>", "atras": "<path d=\"M19 12H5\"/><path d=\"m11 18-6-6 6-6\"/>", "cerrar": "<path d=\"M6.5 6.5l11 11M17.5 6.5l-11 11\"/>", "editar": "<path d=\"M4 20h4L19 9l-4-4L4 16v4z\"/><path d=\"m13.5 6.5 4 4\"/>", "basura": "<path d=\"M4.5 7h15\"/><path d=\"M9.5 7V4.5h5V7\"/><path d=\"M6.5 7l1 13h9l1-13\"/><path d=\"M10.2 11v5M13.8 11v5\"/>", "camara": "<path d=\"M4 8.5h3.2L9 6h6l1.8 2.5H20V19H4z\"/><circle cx=\"12\" cy=\"13.5\" r=\"3.3\"/>", "foto": "<rect x=\"3.5\" y=\"5\" width=\"17\" height=\"14\" rx=\"2.5\"/><circle cx=\"9\" cy=\"10\" r=\"1.6\"/><path d=\"m4 17 5-4.5 4 3.5 2.5-2 4.5 4\"/>", "ojo": "<path d=\"M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/>", "alerta": "<path d=\"M12 4 2.8 19.5h18.4z\"/><path d=\"M12 10v4.2M12 17v.01\"/>", "senal": "<path d=\"M5 12.5a10 10 0 0 1 14 0\"/><path d=\"M8.5 16a5 5 0 0 1 7 0\"/><path d=\"M12 19.5v.01\"/><path d=\"M3.5 3.5l17 17\"/>", "nube": "<path d=\"M7 18.5h10.5a4 4 0 0 0 .6-8A6 6 0 0 0 6.6 9.6 4.5 4.5 0 0 0 7 18.5z\"/><path d=\"m9.5 14 2 2 3.5-3.5\"/>", "reparar": "<path d=\"M14.5 5.5a4 4 0 0 0 4.8 5.3L12 18.1a2.1 2.1 0 0 1-3-3l7.3-7.3a4 4 0 0 0-1.8-2.3z\"/><path d=\"M4 20l3-3\"/>", "descargar": "<path d=\"M12 4v11\"/><path d=\"m7 10.5 5 5 5-5\"/><path d=\"M5 19.5h14\"/>"};
-function ic(n) { return '<svg class="i" viewBox="0 0 24 24" aria-hidden="true">' + (IC[n] || '') + '</svg>'; }
-const TEMAS = [["ciruela", "Ciruela (actual)", ["#FBF7F9", "#6A1B4D", "#F6E6EF"]], ["iphone", "Azul iPhone", ["#F2F2F7", "#0066CC", "#E5F0FC"]], ["grafito", "Grafito", ["#F5F5F7", "#1D1D1F", "#E8E8ED"]], ["rosa", "Rosa champán", ["#FBF6F4", "#9E3F63", "#F8E9EE"]], ["medianoche", "Medianoche", ["#F3F4F7", "#24324F", "#E6EAF3"]], ["salvia", "Salvia", ["#F4F6F2", "#3A6A4D", "#E5F0E7"]]];
+function ic(n) { if (n === 'atras' && esApple()) return '<svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="stroke-width:2.4"><path d="M15 4.5 7.5 12l7.5 7.5"/></svg>'; return '<svg class="i" viewBox="0 0 24 24" aria-hidden="true">' + (IC[n] || '') + '</svg>'; }
+const TEMAS = [["ciruela", "Ciruela (actual)", ["#FBF7F9", "#6A1B4D", "#F6E6EF"]], ["iphone", "Azul iPhone", ["#F2F2F7", "#0066CC", "#E5F0FC"]], ["grafito", "Grafito", ["#F5F5F7", "#1D1D1F", "#E8E8ED"]], ["rosa", "Rosa champán", ["#FBF6F4", "#9E3F63", "#F8E9EE"]], ["medianoche", "Medianoche", ["#F3F4F7", "#24324F", "#E6EAF3"]], ["salvia", "Salvia", ["#F4F6F2", "#3A6A4D", "#E5F0E7"]],, ["vino", "Ciruela degradado (día y noche)", ["#FBF6F9", "#9B2C73", "#1E1B1C"]]];
+const TEMAS_IOS = ['vino'];
+const TEMAS_GRAD = ['vino'];
+function tema() { return document.documentElement.getAttribute('data-tema'); }
+function tintaBarra() {
+  let m = document.querySelector('meta[name=theme-color]');
+  if (!m) { m = document.createElement('meta'); m.name = 'theme-color'; document.head.appendChild(m); }
+  const c = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim(); if (c) m.content = c;
+}
+try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', tintaBarra); } catch (e) { }
+// Privacidad: al salir de la app (cambiar de app), el contenido se difumina para que no se vean DNI ni montos en la vista de apps abiertas
+['visibilitychange', 'pagehide', 'blur'].forEach(ev => window.addEventListener(ev, () => { if (document.visibilityState === 'hidden' || ev === 'pagehide') document.documentElement.classList.add('oculto'); }));
+['visibilitychange', 'pageshow', 'focus'].forEach(ev => window.addEventListener(ev, () => { if (document.visibilityState === 'visible') document.documentElement.classList.remove('oculto'); }));
+function esApple() { return TEMAS_IOS.indexOf(tema()) >= 0; }
 function aplicarTema(t) {
   t = t || (S.d && S.d.config && S.d.config.tema) || 'ciruela';
   if (!TEMAS.some(x => x[0] === t)) t = 'ciruela';
   document.documentElement.setAttribute('data-tema', t);
+  document.documentElement.classList.toggle('ios', TEMAS_IOS.indexOf(t) >= 0);
+  document.documentElement.classList.toggle('grad', TEMAS_GRAD.indexOf(t) >= 0);
+  tintaBarra();
   try { localStorage.setItem('alq_tema', t); } catch (e) { }
 }
 function elegirTema(t) { S.temaPrev = t; aplicarTema(t); document.querySelectorAll('.tema').forEach(b => b.classList.toggle('on', b.dataset.t === t)); }
@@ -747,10 +1122,45 @@ function dniDevuelto(id, deshacer) {
   if (deshacer) toast('Listo: el ' + doc + ' figura como que todavía lo tienes tú.');
   else toastDeshacer(doc.charAt(0).toUpperCase() + doc.slice(1) + ' marcado como devuelto.', () => dniDevuelto(id, true));
 }
-function modal(html) { $('capa').innerHTML = `<div class="velo" onclick="if(event.target===this)cerrarModal()"><div class="modal" role="dialog" aria-modal="true" tabindex="-1">${html}</div></div>`; const f = $('capa').querySelector('input,select,textarea') || $('capa').querySelector('.modal'); if (f) f.focus({ preventScroll: true }); }
+function modal(html) { $('capa').innerHTML = `<div class="velo" onclick="if(event.target===this)cerrarModal()"><div class="modal" role="dialog" aria-modal="true" tabindex="-1">${html}</div></div>`; const f = $('capa').querySelector('input,select,textarea') || $('capa').querySelector('.modal'); if (f) f.focus({ preventScroll: true }); hojaArrastrable(); }
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('capa').innerHTML) cerrarModal(); else if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && $('visor-img') && S.galeria && S.galeria.lista.length > 1) pasarFoto(e.key === 'ArrowLeft' ? -1 : 1); });
 function cerrarVentana() { if (S.cola && S.cola.length) { toast('Espera un momento: se está guardando en el Sheet.'); procesarCola(); return; } google.script.host.close(); }
-function cerrarModal() { $('capa').innerHTML = ''; }
+function cerrarModal() {
+  const v = $('capa').querySelector('.velo');
+  if (!v || !esApple() || window.matchMedia('(prefers-reduced-motion: reduce)').matches) { $('capa').innerHTML = ''; return; }
+  // La ventana se da por cerrada al instante (la app sigue normal) y solo su imagen baja por donde subió
+  v.classList.add('saliendo'); v.style.pointerEvents = 'none'; v.querySelectorAll('[id]').forEach(e => e.removeAttribute('id'));
+  const m = v.querySelector('.modal'); if (m) { const c = getComputedStyle(m); ['background', 'border', 'border-radius', 'padding', 'width', 'max-width', 'max-height', 'box-shadow', 'overflow', 'color', 'position'].forEach(k => m.style.setProperty(k, c.getPropertyValue(k))); m.classList.remove('modal'); m.classList.add('modal-sale'); }
+  document.body.appendChild(v); $('capa').innerHTML = '';
+  setTimeout(() => { if (v.parentNode) v.remove(); }, 260);
+}
+// Hoja tipo iPhone: se arrastra con el dedo (1:1) y, si se suelta con fuerza o pasa la mitad, se cierra; si no, vuelve con suavidad
+function hojaArrastrable() {
+  const m = $('capa').querySelector('.modal'), v = $('capa').querySelector('.velo');
+  if (!m || !esApple() || window.innerWidth >= 900) return;
+  let y0 = null, dy = 0, hist = [], activo = false;
+  m.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'mouse' || m.scrollTop > 0 || /INPUT|TEXTAREA|SELECT|BUTTON/.test(e.target.tagName)) return;
+    y0 = e.clientY; dy = 0; hist = [[e.clientY, e.timeStamp]]; activo = false;
+  });
+  m.addEventListener('pointermove', e => {
+    if (y0 === null) return;
+    const d = e.clientY - y0;
+    if (!activo) { if (d < 8) { if (d < -8) y0 = null; return; } activo = true; try { m.setPointerCapture(e.pointerId); } catch (x) { } m.style.animation = 'none'; m.style.transition = 'none'; }
+    dy = d > 0 ? d : -Math.sqrt(-d) * 2;
+    m.style.transform = `translateY(${dy}px)`; v.style.backgroundColor = `rgba(0,0,0,${Math.max(0, .28 * (1 - dy / m.offsetHeight))})`;
+    hist.push([e.clientY, e.timeStamp]); if (hist.length > 5) hist.shift();
+  });
+  const soltar = () => {
+    if (y0 === null) return; y0 = null; if (!activo) return;
+    const [a, b] = [hist[0], hist[hist.length - 1]], vel = b && a && b[1] > a[1] ? (b[0] - a[0]) / (b[1] - a[1]) * 1000 : 0;
+    const destino = dy + (vel / 1000) * 0.998 / (1 - 0.998);
+    m.style.transition = 'transform .38s cubic-bezier(.32,.72,0,1)'; v.style.transition = 'background-color .3s ease';
+    if (destino > m.offsetHeight * 0.45) { m.style.transform = 'translateY(105%)'; v.style.backgroundColor = 'rgba(0,0,0,0)'; v.style.pointerEvents = 'none'; setTimeout(() => { if (v.parentNode) v.remove(); }, 330); }
+    else { m.style.transform = ''; v.style.backgroundColor = ''; }
+  };
+  m.addEventListener('pointerup', soltar); m.addEventListener('pointercancel', soltar);
+}
 function confirmar(titulo, texto, fnOk, conMotivo) {
   window._ok = () => { const m = conMotivo ? $('motivo').value : ''; cerrarModal(); fnOk(m); };
   modal(`<h2 style="margin-top:0;font-size:20px">${esc(titulo)}</h2><p class="mut" style="font-size:16px">${esc(texto)}</p>${conMotivo ? '<label class="l">Motivo (opcional)</label><input id="motivo">' : ''}
@@ -800,6 +1210,26 @@ async function tomarFoto(inp, ruta) {
     const im = $('fp-' + ruta); if (im) { im.src = data; im.style.display = ''; im.onclick = () => verFotoElegida(ruta); im.removeAttribute('data-fid'); }
   } catch (e) { if (lbl) lbl.textContent = ''; toast(e.message, true); }
 }
+function esGrad() { return TEMAS_GRAD.indexOf(tema()) >= 0; }
+// Filtro con su color propio, ícono y contador (estilo apps de banco / Spotify / Apple)
+function chipFiltro(v, texto, n, on, accion, icono) {
+  return `<button class="chip cf ${on ? 'on' : ''}" data-v="${esc(v)}" aria-pressed="${on}" onclick="${accion}">${icono ? ic(icono) : ''}<span class="ct">${esc(texto)}</span>${n != null ? `<span class="cn">${n}</span>` : ''}</button>`;
+}
+// La «luz» del filtro elegido se desliza desde donde estaba hasta el nuevo (como el control segmentado de iPhone)
+function moverLuz() {
+  S._luz = S._luz || {};
+  document.querySelectorAll('.filtros').forEach(g => {
+    const luz = g.querySelector('.luz'), on = g.querySelector('.chip.on'), k = g.getAttribute('aria-label');
+    if (!luz || !on) { if (luz) luz.style.opacity = '0'; return; }
+    const r = { x: on.offsetLeft, y: on.offsetTop, w: on.offsetWidth, h: on.offsetHeight }, ant = S._luz[k];
+    const pon = q2 => { luz.style.transform = `translate(${q2.x}px,${q2.y}px)`; luz.style.width = q2.w + 'px'; luz.style.height = q2.h + 'px'; luz.style.setProperty('--lh', q2.h + 'px'); };
+    const cs = getComputedStyle(on).getPropertyValue('--cs').trim(); if (cs) luz.style.setProperty('--lc', cs);
+    if (ant && (ant.x !== r.x || ant.w !== r.w)) { luz.style.transition = 'none'; pon(ant); void luz.offsetWidth; luz.style.transition = ''; }
+    pon(r); luz.style.opacity = '1'; S._luz[k] = r;
+    const gl = g.scrollLeft, gw = g.clientWidth; if (r.x < gl || r.x + r.w > gl + gw) g.scrollTo({ left: Math.max(0, r.x - 16), behavior: 'smooth' });
+  });
+}
+window.addEventListener('resize', () => { if (S._luz) { S._luz = {}; moverLuz(); } });
 function chips(lista, actual, fn, extra) {
   return `<div class="chips ${extra || ''}">${lista.map(o => { const v = Array.isArray(o) ? o[0] : o, t = Array.isArray(o) ? o[1] : o, s = Array.isArray(o) && o[2] ? `<small>${esc(o[2])}</small>` : '';
     return `<button class="chip ${String(actual) === String(v) ? 'on' : ''}" aria-pressed="${String(actual) === String(v)}" onclick="${fn}(${q(v)})">${esc(t)}${s}</button>`; }).join('')}</div>`;
@@ -930,7 +1360,12 @@ function waRecordar(a) { return 'https:\/\/wa.me/' + telWa(a.telefono) + '?text=
 // ─────────── navegación ───────────
 const NAV = [['inicio', 'inicio', 'Inicio'], ['lista', 'lista', 'Alquileres'], ['prendas', 'prendas', 'Prendas'], ['mas', 'mas', 'Más']];
 const GRUPO = { alquiler: 'lista', nuevo: 'inicio', hecho: 'inicio', devolucion: 'inicio', pago: 'inicio', prenda: 'prendas', prendaForm: 'prendas', clientas: 'mas', clienta: 'mas', clientaNueva: 'mas', ajustes: 'mas' };
-function pintarNav() { const act = GRUPO[S.vista] || S.vista; $('nav').innerHTML = NAV.map(n => `<button class="${n[0] === act ? 'on' : ''}" onclick="ir('${n[0]}')">${ic(n[1])}${n[2]}</button>`).join(''); }
+function pintarNav() {
+  const act = GRUPO[S.vista] || S.vista;
+  const atr = S.d && S.d.alquileres ? S.d.alquileres.filter(a => estadoVis(a) === 'Atrasado').length : 0;
+  $('nav').innerHTML = `<div class="nav-marca"><span class="nav-logo"></span><span>${esc(cfg().negocio || 'Alquileres')}</span></div><div class="nav-l">Menú</div>` +
+    NAV.map(n => `<button class="${n[0] === act ? 'on' : ''}" onclick="ir('${n[0]}')"><span class="nav-ic">${ic(n[1])}</span><span class="nav-tx">${n[2]}</span>${n[0] === 'lista' && atr ? `<b class="nav-n" title="${atr} atrasado${atr > 1 ? 's' : ''}">${atr}</b>` : ''}</button>`).join('');
+}
 function ir(v, p, reemplazar) {
   p = sinTmp(p);
   if (!reemplazar && S.d && (S.vista !== v || JSON.stringify(S.param) !== JSON.stringify(p == null ? null : p))) { S.pila.push({ v: S.vista, p: S.param }); if (S.pila.length > 40) S.pila.shift(); }
@@ -953,6 +1388,7 @@ function atras() {
   }
   if (!prev) prev = { v: S.vista === 'prendaForm' && S.param ? 'prenda' : (PADRE[S.vista] || 'inicio'), p: S.vista === 'prendaForm' && S.param ? S.param : null };
   if (prev.v === S.vista && JSON.stringify(prev.p) === JSON.stringify(S.param)) prev = { v: 'inicio', p: null };
+  S._dir = 'atras';
   ir(prev.v, prev.p, true);
 }
 function render() {
@@ -966,13 +1402,39 @@ function render() {
   $('pie').innerHTML = '';
   document.body.classList.toggle('ancho', ['inicio', 'alquiler'].indexOf(S.vista) >= 0);
   document.body.classList.toggle('foco', ['nuevo', 'devolucion', 'pago', 'prendaForm', 'clientaNueva'].indexOf(S.vista) >= 0 && (S.vista !== 'devolucion' && S.vista !== 'pago' || !!S.param));
-  m.innerHTML = (V[S.vista] || vInicio)();
+  const clave = S.vista + JSON.stringify(S.param) + (S.vista === 'nuevo' && S.form ? S.form.paso : '');
+  const vistaAntes = S._ultVista, cambio = S._ultClave && clave !== S._ultClave;
+  if (cambio && esApple()) transicionApple(m, vistaAntes, S.vista, S._dir === 'atras');
+  const TIT = { inicio: '', lista: 'Alquileres', prendas: 'Prendas', mas: 'Más' };
+  $('titulo').textContent = esApple() && TIT[S.vista] && TEMAS_GRAD.indexOf(tema()) < 0 ? TIT[S.vista] : (cfg().negocio || 'Alquileres');
+  S._scr = {}; document.querySelectorAll('.filtros').forEach(g => { S._scr[g.getAttribute('aria-label')] = g.scrollLeft; });
+  if (cambio) S._luz = {};
+  m.innerHTML = (esApple() && TIT[S.vista] ? `<h1 class="gran-titulo">${TIT[S.vista]}</h1>` : '') + (V[S.vista] || vInicio)();
+  S._ultClave = clave; S._ultVista = S.vista; S._dir = null;
   if (S.vista === 'lista') pintarResultados();
   if (S.vista === 'nuevo') { pasoDespues(); if (S._ultPaso !== F().paso) { S._ultPaso = F().paso; enfocarPaso(); } }
   if (S.vista === 'devolucion' && S.param) pintarPieDev();
   if (S.vista === 'prendas') pintarPrendas();
   if (S.vista === 'clientas') pintarClientas();
+  if (esGrad()) { document.querySelectorAll('.filtros').forEach(g => { const k = g.getAttribute('aria-label'); if (S._scr && S._scr[k]) g.scrollLeft = S._scr[k]; }); moverLuz(); }
 }
+// iPhone: la pantalla nueva entra desde la derecha y la anterior se corre un poco a la izquierda (al volver, al revés).
+// Entre las secciones de la barra de abajo no hay deslizamiento (como en iPhone). En computadora, un fundido corto.
+const RAICES = ['inicio', 'lista', 'prendas', 'mas'];
+function transicionApple(m, de, a, volver) {
+  const vieja = document.querySelector('.capa-vieja'); if (vieja) vieja.remove();
+  m.classList.remove('ap-entra', 'ap-vuelve', 'ap-funde');
+  const quieto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (window.innerWidth >= 900 || quieto || (RAICES.indexOf(de) >= 0 && RAICES.indexOf(a) >= 0)) { void m.offsetWidth; m.classList.add('ap-funde'); return; }
+  const r = m.getBoundingClientRect();
+  const capa = document.createElement('div'); capa.className = 'capa-vieja' + (volver ? ' sale' : ' queda'); capa.setAttribute('aria-hidden', 'true');
+  const copia = m.cloneNode(true); copia.removeAttribute('id'); copia.querySelectorAll('[id]').forEach(e => e.removeAttribute('id'));
+  copia.style.cssText = `position:absolute;top:${r.top}px;left:${r.left}px;width:${r.width}px;margin:0`;
+  capa.appendChild(copia); document.body.appendChild(capa);
+  void m.offsetWidth; m.classList.add(volver ? 'ap-vuelve' : 'ap-entra');
+  setTimeout(() => { capa.remove(); m.classList.remove('ap-entra', 'ap-vuelve'); }, 460);
+}
+window.addEventListener('scroll', () => { document.body.classList.toggle('bajado', window.scrollY > 44); }, { passive: true });
 function pie(html) { $('pie').innerHTML = `<div class="pie"><div style="display:flex;gap:8px;width:100%">${html}</div></div>`; }
 function cabecera(t, sub, extra) { return `<div class="row sp" style="margin-bottom:12px"><div class="row" style="min-width:0"><button class="ib" aria-label="Volver" onclick="atras()">${ic('atras')}</button><div style="min-width:0"><div style="font-size:20px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t}</div>${sub ? `<div class="mut">${sub}</div>` : ''}</div></div>${extra || ''}</div>`; }
 
@@ -1005,20 +1467,27 @@ function vInicio() {
   }));
   const hoyLista = entregar.map(a => filaAlq(a, 'Entregar')).concat(recoger.map(a => filaAlq(a, 'Recoge hoy')), atr.map(a => filaAlq(a, dias(a.pactada, h) + ' día' + (dias(a.pactada, h) > 1 ? 's' : '') + ' tarde')));
   const f = new Date();
-  return `<div class="inicio"><div class="mut h-fecha" style="margin-bottom:10px;font-size:15px">Hoy es ${DIAS_L[f.getDay()]} ${pad(f.getDate())}/${pad(f.getMonth() + 1)}</div>
+  return `<div class="inicio">${esApple() ? `<div class="h-fecha" style="grid-column:1/-1"><div class="fecha-mini">${DIAS_L[f.getDay()]} ${f.getDate()} de ${['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'][f.getMonth()]}</div><h1 class="gran-titulo">${f.getHours() < 12 ? 'Buenos días' : f.getHours() < 19 ? 'Buenas tardes' : 'Buenas noches'}</h1></div>` : `<div class="mut h-fecha" style="margin-bottom:10px;font-size:15px">Hoy es ${DIAS_L[f.getDay()]} ${pad(f.getDate())}/${pad(f.getMonth() + 1)}</div>`}
   <div class="h-acc"><button class="grande pri" onclick="ir('nuevo')">${ic('nuevo')}Nuevo alquiler</button>
   <div class="g2"><button class="grande" style="font-size:16px;padding:14px" onclick="ir('devolucion')">${ic('devolucion')}Devolución</button><button class="grande" style="font-size:16px;padding:14px" onclick="ir('pago')">${ic('cobrar')}Cobrar</button></div></div>
   <div class="h-hoy">${alertas.map(t => `<div class="warn row" style="align-items:flex-start">${ic('alerta')}<span>${esc(t)}</span></div>`).join('')}
   <div class="card" style="padding:4px 12px">
-    <div class="row sp" style="padding:10px 4px 4px"><h2 style="margin:0;font-size:17px">Para hoy</h2><span class="mut">${hoyLista.length || ''}</span></div>
+    <div class="row sp" style="padding:10px 4px 4px"><h2 style="margin:0;font-size:17px">Para hoy${esApple() && hoyLista.length ? ` <span class="h2n">${hoyLista.length}</span>` : ''}</h2>${esApple() ? '' : `<span class="mut">${hoyLista.length || ''}</span>`}</div>
     ${hoyLista.length ? hoyLista.join('') : '<div class="mut" style="padding:8px 4px 14px">Nada pendiente para hoy. 🎉</div>'}
     ${manana.length ? `<div class="mut" style="padding:10px 4px;border-top:1px solid var(--bd)">Mañana: ${manana.map(a => esc(nombre1(a.clienta)) + (a.estado === 'Reservado' ? ' (sale)' : ' (vuelve)')).join(', ')}</div>` : ''}
-  </div></div>
+  </div></div>${esGrad() ? estantePrendas() : ''}
   <div class="resumen">
     <button class="res" onclick="irFiltro('Te deben')">${ic('cobrar')}<b>${money(debe)}</b><span>Te deben</span></button>
     <button class="res" onclick="irFiltro('DNI guardados')">${ic('dni')}<b>${dni}</b><span>DNI guardado${dni === 1 ? '' : 's'}</span></button>
     <button class="res" onclick="irFiltro('Lo tienen')">${ic('vestido')}<b>${A.filter(a => a.estado === 'Entregado').length}</b><span>Afuera</span></button>
   </div></div>`;
+}
+// Estante horizontal (tema Escenario): las prendas más pedidas, con su foto
+function estantePrendas() {
+  const n = {}; S.d.detalle.forEach(d => { n[d.codigo] = (n[d.codigo] || 0) + 1; });
+  const L = S.d.prendas.filter(p => p.estado !== 'Baja').sort((x, y) => (n[y.id] || 0) - (n[x.id] || 0) || String(x.nombre).localeCompare(String(y.nombre))).slice(0, 12);
+  if (!L.length) return '';
+  return `<section class="estante"><div class="cab"><h2>Las más pedidas</h2><button onclick="ir('prendas')">Ver todas</button></div><div class="fila-h">${L.map(p => `<button class="tile" onclick="ir('prenda',${q(p.id)})">${miniatura(p.foto)}<b>${esc(p.nombre)}</b><span>${p.estado === 'Disponible' ? money(p.precio) + ' · libre' : esc(p.estado)}</span></button>`).join('')}</div></section>`;
 }
 function irFiltro(f) { S.filtro = f; S.q = ''; S.mes = ''; ir('lista'); }
 
@@ -1060,7 +1529,7 @@ function vNuevo() {
   return `<div class="row sp"><button class="ib" aria-label="Paso anterior" onclick="${f.paso > 1 ? 'pasoAtras()' : 'atras()'}">${ic('atras')}</button><p class="paso">Paso ${f.paso} de 4</p><button class="ib" aria-label="Salir sin guardar" style="font-size:16px" onclick="confirmar('¿Salir sin guardar?','Se pierde lo que escribiste.',()=>ir('inicio',null,true))">${ic('cerrar')}</button></div>
     <div class="barra" role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="${f.paso}"><div style="width:${f.paso * 25}%"></div></div><p class="preg" tabindex="-1" id="preg">${titulos[f.paso]}</p>${cuerpo}`;
 }
-function pasoAtras() { F().paso--; render(); }
+function pasoAtras() { F().paso--; S._dir = 'atras'; render(); }
 function enfocarPaso() { const p = $('preg'); if (p) p.focus({ preventScroll: true }); }
 function pasoDespues() {
   const f = F();
@@ -1485,12 +1954,23 @@ function vLista() {
   const MES = ['', 'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
   const principales = ['Activos', 'Atrasados', 'Te deben', 'Todos'], otros = Object.keys(FILTROS).filter(k => principales.indexOf(k) < 0);
   return `<input class="buscar" placeholder="Buscar nombre, DNI, celular o prenda" value="${esc(S.q)}" oninput="S.q=this.value;pintarResultados()" autocomplete="off">
-  <div class="chips scroll" style="margin-top:10px">${principales.map(f => `<button class="chip ${S.filtro === f ? 'on' : ''}" onclick="S.filtro=${q(f)};render()">${f}</button>`).join('')}
+  ${esGrad() ? `<div class="chips scroll filtros" role="group" aria-label="Filtrar alquileres"><i class="luz" aria-hidden="true"></i>${principales.map(f => chipFiltro(f, f, S.d.alquileres.filter(FILTROS[f]).length, S.filtro === f, `S.filtro=${q(f)};render()`, { Activos: 'vestido', Atrasados: 'reloj', 'Te deben': 'cobrar', Todos: 'lista' }[f])).join('')}</div><div class="chips filtros-mas">` : `<div class="chips scroll" style="margin-top:10px">${principales.map(f => `<button class="chip ${S.filtro === f ? 'on' : ''}" onclick="S.filtro=${q(f)};render()">${f}</button>`).join('')}`}
     <select style="width:auto;border-radius:22px;padding:8px 12px;${otros.indexOf(S.filtro) >= 0 ? 'background:var(--pri);color:var(--onpri)' : ''}" onchange="S.filtro=this.value||'Activos';render()"><option value="">Más…</option>${otros.map(o => `<option ${S.filtro === o ? 'selected' : ''}>${o}</option>`).join('')}</select>
     <select style="width:auto;border-radius:22px;padding:8px 12px" onchange="S.mes=this.value;pintarResultados()"><option value="">Todos los meses</option>${meses.map(m => `<option value="${m}" ${S.mes === m ? 'selected' : ''}>${MES[+m.slice(5)]} ${m.slice(0, 4)}</option>`).join('')}</select></div>
   <div class="row sp solo-pc" style="margin-bottom:10px;width:100%"><div class="row"><button class="chip ${S.modo === 'alquiler' ? 'on' : ''}" onclick="S.modo='alquiler';render()">Por alquiler</button><button class="chip ${S.modo === 'prenda' ? 'on' : ''}" onclick="S.modo='prenda';render()">Por prenda</button></div>
     <div class="row"><button class="btn2 sm" onclick="descargar()">${ic('descargar')} Descargar Excel</button><a class="btn2 sm" href="${esc(S.d.urlLibro)}" target="_blank" rel="noopener">Abrir Google Sheet</a></div></div>
   <div id="res"></div>`;
+}
+// Agrupa la lista por cuándo hay que actuar: Atrasados, Hoy, Mañana, Esta semana, Más adelante, Terminados
+function gruposAlq(L) {
+  const h = hoy(), G = [['atr', 'Atrasados'], ['hoy', 'Hoy'], ['man', 'Mañana'], ['sem', 'Esta semana'], ['des', 'Más adelante'], ['fin', 'Terminados']], B = {};
+  L.forEach(a => {
+    const e = estadoVis(a), d = e === 'Reservado' ? a.salida : a.pactada, n = dias(h, d);
+    const k = e === 'Atrasado' ? 'atr' : (e === 'Devuelto' || e === 'Anulado') ? 'fin' : n <= 0 ? 'hoy' : n === 1 ? 'man' : n <= 7 ? 'sem' : 'des';
+    const et = e === 'Atrasado' ? dias(a.pactada, h) + 'd tarde' : e === 'Entregado' ? 'vuelve ' + cuando(a.pactada) : e === 'Reservado' ? 'sale ' + cuando(a.salida) : '';
+    (B[k] = B[k] || []).push(filaAlq(a, et));
+  });
+  return G.filter(g => B[g[0]]).map(g => `<section class="grupo g-${g[0]}"><div class="grupo-cab"><span>${g[1]}</span><b>${B[g[0]].length}</b></div>${B[g[0]].join('')}</section>`).join('');
 }
 function filtrados() {
   const f = FILTROS[S.filtro] || FILTROS.Activos, t = norm(S.q.trim());
@@ -1529,6 +2009,7 @@ function pintarResultados() {
     box.innerHTML = L.length ? `<div class="mut" style="margin:6px 0">${L.length} alquiler${L.length === 1 ? '' : 'es'}${debe > 0 ? ' · te deben ' + money(debe) : ''}</div><div class="card" style="padding:4px 12px">${L.map(a => {
       const e = estadoVis(a); const et = e === 'Atrasado' ? dias(a.pactada, hoy()) + 'd tarde' : e === 'Entregado' ? 'vuelve ' + cuando(a.pactada) : e === 'Reservado' ? 'sale ' + cuando(a.salida) : '';
       return filaAlq(a, et); }).join('')}</div>` : '<div class="empty">Sin resultados.</div>';
+    if (esGrad() && L.length) box.innerHTML = `<div class="mut" style="margin:6px 2px">${L.length} alquiler${L.length === 1 ? '' : 'es'}${debe > 0 ? ' · te deben ' + money(debe) : ''}</div>` + gruposAlq(L);
   }
 }
 function descargar() {
@@ -1545,7 +2026,7 @@ function vPrendas() {
   const n = e => S.d.prendas.filter(p => e === 'Todas' ? p.estado !== 'Baja' : p.estado === e).length;
   const ests = ['Todas', 'Disponible', 'Alquilada', 'Reparación'].concat(S.d.prendas.some(p => p.estado === 'Lavandería') ? ['Lavandería'] : [], S.d.prendas.some(p => p.estado === 'Baja') ? ['Baja'] : []);
   return `<div class="row" style="gap:8px"><input class="buscar" placeholder="Buscar prenda" value="${esc(S.pq)}" oninput="S.pq=this.value;pintarPrendas()" style="flex:1" autocomplete="off"><button class="btn2" onclick="ir('prendaForm')">＋ Nueva</button></div>
-  <div class="chips scroll" style="margin-top:10px">${ests.map(e => `<button class="chip ${S.pf === e ? 'on' : ''}" onclick="S.pf=${q(e)};render()">${e === 'Alquilada' ? 'Afuera' : e === 'Baja' ? 'Eliminadas' : e} (${n(e)})</button>`).join('')}</div>
+  ${esGrad() ? `<div class="chips scroll filtros" role="group" aria-label="Filtrar prendas"><i class="luz" aria-hidden="true"></i>${ests.map(e => chipFiltro(e, e === 'Alquilada' ? 'Afuera' : e === 'Baja' ? 'Eliminadas' : e, n(e), S.pf === e, `S.pf=${q(e)};render()`)).join('')}</div>` : `<div class="chips scroll" style="margin-top:10px">${ests.map(e => `<button class="chip ${S.pf === e ? 'on' : ''}" onclick="S.pf=${q(e)};render()">${e === 'Alquilada' ? 'Afuera' : e === 'Baja' ? 'Eliminadas' : e} (${n(e)})</button>`).join('')}</div>`}
   <div class="card" style="padding:4px 12px" id="pres"></div>`;
 }
 function pintarPrendas() {
