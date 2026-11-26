@@ -555,6 +555,61 @@ html.ios[data-tema=vino]{--g1:#C2448F;--g2:#7E1F5C}html.ios.grad .btn,html.ios.g
 }
 /* Los títulos que reciben el foco solo para lectores de pantalla no muestran el anillo */
 html.ios.grad [tabindex="-1"]:focus,html.ios.grad [tabindex="-1"]:focus-visible{outline:none}
+/* v32 · Paso 2: fechas en botones parejos */
+.q2{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:22px 0 9px;font-size:15px;font-weight:700;color:var(--tx)}
+.paso2>.q2:first-child{margin-top:4px}
+.q2 span{font-size:12.5px;font-weight:500;color:var(--tx2)}
+.seg{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:8px}
+.seg button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:60px;padding:8px 6px;border:1px solid var(--bd2);background:var(--card);color:var(--tx);border-radius:14px;font:inherit;cursor:pointer;text-align:center;line-height:1.15;transition:transform 160ms cubic-bezier(.23,1,.32,1),background-color 150ms ease,border-color 150ms ease,color 150ms ease,box-shadow 150ms ease}
+.seg button b{font-size:15px;font-weight:650}
+.seg button small{font-size:12.5px;font-weight:500;color:var(--tx2);font-variant-numeric:tabular-nums}
+.seg button:hover:not(.on){border-color:var(--pri)}
+.seg button:active{transform:scale(.97);transition:transform 80ms ease-out}
+.seg button.on{background:var(--pri);border-color:transparent;color:var(--onpri);box-shadow:0 8px 18px -10px var(--pri)}
+.seg button.on small{color:inherit;opacity:.88}
+html.ios.grad .seg button.on{background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff}
+.fecha2{display:block;margin-top:10px;font-size:13px;font-weight:600;color:var(--tx2)}
+.fecha2 input{margin-top:6px}
+.ticket{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:6px 12px;margin-top:24px;padding:16px 18px 14px;border-radius:18px;background:var(--acbg);border:1px solid color-mix(in srgb,var(--pri) 18%,transparent)}
+.ticket .k{font-size:12.5px;font-weight:600;color:var(--tx2);margin-bottom:2px}
+.ticket .d{font-size:20px;font-weight:750;color:var(--tx);letter-spacing:-.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ticket .m{display:flex;flex-direction:column;align-items:center;gap:5px;padding-bottom:7px;min-width:64px}
+.ticket .m span{font-size:12.5px;font-weight:700;color:var(--pri);white-space:nowrap}
+.ticket .m i{display:block;width:100%;height:2px;border-radius:2px;background:var(--pri);position:relative;opacity:.7}
+.ticket .m i::after{content:"";position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left:7px solid var(--pri);border-right:0}
+.ticket .tk-pie{grid-column:1/-1;margin-top:10px;padding-top:10px;border-top:1px solid color-mix(in srgb,var(--pri) 16%,transparent);font-size:13px;color:var(--tx2)}
+@media (max-width:420px){.ticket .d{font-size:17px}.seg button b{font-size:14px}.seg button small{font-size:11.5px}.seg button{padding:8px 3px}}
+/* v32 · Montos de Inicio: nunca cortados */
+.res{container-type:inline-size}
+.res b.din,html.ios .res b.din,html.ios.grad .res b.din{overflow:visible;text-overflow:clip;white-space:nowrap;font-size:min(22px,calc(100cqi / (var(--n) * .6)))}
+.res b.din small{font-size:.62em;font-weight:700;margin-right:2px;opacity:.85}
+/* v32 · Detalle del alquiler en secciones */
+.sec{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px 16px;margin-bottom:12px}
+html.ios.grad .sec{background:var(--card);border:1px solid var(--bd);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+@media (prefers-color-scheme:light){html.ios[data-tema=vino] .sec{background:rgba(255,255,255,.82);box-shadow:0 1px 2px rgba(80,20,60,.04),0 8px 24px -16px rgba(80,20,60,.18)}}
+.sec h3{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:13px;font-weight:700;color:var(--tx2);letter-spacing:0}
+.sec h3 .i{width:17px;height:17px;color:var(--pri)}
+.sec h3 .h3n{margin-left:auto;min-width:22px;height:22px;padding:0 7px;border-radius:11px;background:var(--acbg);color:var(--pri);font-size:12px;display:inline-flex;align-items:center;justify-content:center}
+.fechas3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.fechas3>div{background:var(--relleno,var(--grbg));border-radius:12px;padding:10px 12px}
+.fechas3 span{display:block;font-size:12px;font-weight:600;color:var(--tx2)}
+.fechas3 b{display:block;font-size:16px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.gar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.gar-tx{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.gar-tx b{font-size:16px}
+.gar-ft{flex:none}
+.lst-pr .pr-it{padding:11px 0;border-top:1px solid var(--sep,var(--bd))}
+.lst-pr .pr-it:first-child{border-top:0;padding-top:2px}
+.lst-pr .pr-it:last-child{padding-bottom:2px}
+.pr-est{display:inline-block;margin-top:5px;font-size:12px;font-weight:700;color:var(--bl);background:var(--blbg);padding:2px 8px;border-radius:8px}
+.sec-cobro .tot{padding:5px 0}
+.sec-cobro .tot.saldo{margin-top:8px;padding:12px 14px;border:0;border-radius:12px;font-size:18px}
+.sec-cobro .tot.saldo.debe{background:var(--wabg)}
+.sec-cobro .tot.saldo.debe .er-t{color:var(--wa)}
+.sec-cobro .tot.saldo.ok{background:var(--okbg)}
+.sec .pago{padding:10px 0;border-top:1px solid var(--sep,var(--bd))}
+.sec h3+.pago{border-top:0;padding-top:0}
+
 /* Barra de abajo: vidrio más denso para que el texto de atrás no se lea a través */
 @media (max-width:899px){html.ios.grad .nav{background:rgba(32,28,30,.9);-webkit-backdrop-filter:saturate(180%) blur(30px);backdrop-filter:saturate(180%) blur(30px)}}
 @media (max-width:899px) and (prefers-color-scheme:light){html.ios[data-tema=vino] .nav{background:rgba(255,255,255,.92)}}
@@ -1563,7 +1618,7 @@ function vInicio() {
     ${manana.length ? `<div class="mut" style="padding:10px 4px;border-top:1px solid var(--bd)">Mañana: ${manana.map(a => esc(nombre1(a.clienta)) + (a.estado === 'Reservado' ? ' (sale)' : ' (vuelve)')).join(', ')}</div>` : ''}
   </div></div>${esGrad() ? estantePrendas() : ''}
   <div class="resumen">
-    <button class="res" onclick="irFiltro('Te deben')">${ic('cobrar')}<b>${money(debe)}</b><span>Te deben</span></button>
+    <button class="res" onclick="irFiltro('Te deben')">${ic('cobrar')}<b class="din" style="--n:${money(debe).length}"><small>S/</small>${money(debe).slice(3)}</b><span>Te deben</span></button>
     <button class="res" onclick="irFiltro('DNI guardados')">${ic('dni')}<b>${dni}</b><span>DNI guardado${dni === 1 ? '' : 's'}</span></button>
     <button class="res" onclick="irFiltro('Lo tienen')">${ic('vestido')}<b>${A.filter(a => a.estado === 'Entregado').length}</b><span>Afuera</span></button>
   </div></div>`;
@@ -1684,12 +1739,23 @@ function paso2() {
   const opV = [1, 2, 3].map(n => [sumar(f.salida, n), n === 1 ? 'Al día siguiente' : 'En ' + n + ' días', fc(sumar(f.salida, n))]).concat([['otra', 'Otra fecha']]);
   const salEsOtra = f.otraSalida || opS.slice(0, 2).every(o => o[0] !== f.salida);
   const vuelEsOtra = f.otraVuelta || opV.slice(0, 3).every(o => o[0] !== f.pactada);
-  return `<div class="l" style="margin-top:0">Sale</div>${chips(opS, salEsOtra ? 'otra' : f.salida, 'setSalida')}
-    ${salEsOtra ? `<input type="date" value="${f.salida}" onchange="F().salida=this.value;if(F().pactada<this.value)F().pactada=sumar(this.value,cfg().dias_alquiler||2);F().entregar=this.value<=hoy();render()">` : ''}
-    <div class="l">Devuelve</div>${chips(opV, vuelEsOtra ? 'otra' : f.pactada, 'setVuelta')}
-    ${vuelEsOtra ? `<input type="date" value="${f.pactada}" min="${f.salida}" onchange="F().pactada=this.value;render()">` : ''}
-    ${f.salida <= h ? `<div class="l">¿Se lo lleva ahora?</div>${chips([['si', 'Sí, ahora'], ['no', 'No, es reserva']], f.entregar ? 'si' : 'no', 'setEntregar')}` : `<div class="note">Queda como reserva para el ${fl(f.salida)}.</div>`}
-    <div class="card" style="margin-top:14px"><div class="b">Del ${fl(f.salida)} al ${fl(f.pactada)}</div><div class="mut">Mora desde el ${fl(sumar(f.pactada, 1))} si no devuelve.</div></div>`;
+  const seg = (lista, actual, fn, cls) => `<div class="seg ${cls || ''}" role="group" style="--n:${lista.length}">${lista.map(o => { const on = String(actual) === String(o[0]);
+    return `<button type="button" class="${on ? 'on' : ''}" aria-pressed="${on}" onclick="${fn}(${q(o[0])})"><b>${esc(o[1])}</b>${o[2] ? `<small>${esc(o[2])}</small>` : ''}</button>`; }).join('')}</div>`;
+  const opS2 = [opS[0], opS[1], ['otra', 'Otra fecha', salEsOtra ? fc(f.salida) : 'elegir']];
+  const opV2 = [1, 2, 3].map(n => [sumar(f.salida, n), n + (n === 1 ? ' día' : ' días'), fc(sumar(f.salida, n))]).concat([['otra', 'Otra fecha', vuelEsOtra ? fc(f.pactada) : 'elegir']]);
+  const n = dias(f.salida, f.pactada);
+  return `<div class="paso2">
+    <div class="q2">Sale</div>${seg(opS2, salEsOtra ? 'otra' : f.salida, 'setSalida')}
+    ${salEsOtra ? `<label class="fecha2">Fecha de salida<input type="date" value="${f.salida}" onchange="F().salida=this.value;if(F().pactada<this.value)F().pactada=sumar(this.value,cfg().dias_alquiler||2);F().entregar=this.value<=hoy();render()"></label>` : ''}
+    <div class="q2">Devuelve <span>contando desde la salida</span></div>${seg(opV2, vuelEsOtra ? 'otra' : f.pactada, 'setVuelta')}
+    ${vuelEsOtra ? `<label class="fecha2">Fecha de devolución<input type="date" value="${f.pactada}" min="${f.salida}" onchange="F().pactada=this.value;render()"></label>` : ''}
+    ${f.salida <= h ? `<div class="q2">¿Se lo lleva ahora?</div>${seg([['si', 'Sí, ahora', 'sale con la prenda'], ['no', 'No, es reserva', 'la recoge después']], f.entregar ? 'si' : 'no', 'setEntregar')}` : `<div class="note" style="margin-top:16px">Queda como reserva para el ${fl(f.salida)}.</div>`}
+    <div class="ticket" aria-label="Resumen de fechas">
+      <div><div class="k">Sale</div><div class="d">${fc(f.salida)}</div></div>
+      <div class="m"><span>${n === 0 ? 'mismo día' : n + (n === 1 ? ' día' : ' días')}</span><i aria-hidden="true"></i></div>
+      <div style="text-align:right"><div class="k">Devuelve</div><div class="d">${fc(f.pactada)}</div></div>
+      <div class="tk-pie">Si no devuelve a tiempo, la mora empieza el ${fl(sumar(f.pactada, 1))}.</div>
+    </div></div>`;
 }
 function setEntregar(v) { F().entregar = v === 'si'; render(); }
 function sig2() { const f = F(); if (f.pactada < f.salida) return toast('La devolución no puede ser antes de la salida.', true); f.avisoOcupadas = null; f.paso = 3; render(); }
@@ -1964,32 +2030,41 @@ function vAlquiler() {
   ${e === 'Atrasado' ? `<div class="warn">Tenía que volver el ${fl(a.pactada)}. Van ${dias(a.pactada, hoy())} día(s) de atraso.</div>` : ''}
   ${S.edit === 'fechas' ? editorFechas(a) : ''}
   <div class="det"><div>
-  <div class="card">
-    <div class="tot"><span>Sale</span><span class="b">${fl(a.salida)}</span></div>
-    <div class="tot"><span>Devuelve</span><span class="b">${fl(a.pactada)}</span></div>
-    ${a.devuelto ? `<div class="tot"><span>Devolvió</span><span class="b">${fl(a.devuelto)}</span></div>` : ''}
-    <div class="tot"><span>Garantía</span><span>${esc(a.garantia === 'DNI físico' ? 'DNI' : a.garantia || 'Ninguna')} ${a.fotoGarantia ? verFoto(a.fotoGarantia, 'Ver') : a.garantia && a.garantia !== 'Ninguna' && a.estado !== 'Anulado' ? fotoDespues('garantia', a.id, a.garantia === 'DNI físico' ? 'Agregar foto del DNI' : 'Agregar foto del documento') : ''} ${a.garantiaDevuelta === 'No' ? '<span class="pill p-Reservado">la tienes tú</span>' : a.garantiaDevuelta === 'Sí' ? '<span class="ok-t">devuelta ✓</span>' : ''}</span></div>
-    ${a.garantiaDevuelta === 'No' && a.estado !== 'Reservado' ? `<button class="btn2 sm w" style="margin-top:6px" onclick="dniDevuelto(${q(a.id)})">${ic('dni')} Ya le devolví su ${a.garantia === 'DNI físico' ? 'DNI' : 'documento'}</button>` : ''}
-    ${a.garantiaDevuelta === 'Sí' ? `<button class="link" style="margin-top:2px" onclick="confirmar('¿Todavía tienes su ${a.garantia === 'DNI físico' ? 'DNI' : 'documento'}?', 'Se marcará como que lo tienes tú, por si lo marcaste devuelto por error.', () => dniDevuelto(${q(a.id)}, true))">¿Lo marcaste por error? Deshacer</button>` : ''}
-  </div>
-  <div class="card lst-pr" style="padding:4px 14px">${ds.map(d => `<div style="padding:10px 0;border-bottom:1px solid var(--bd)"><div class="row sp"><span class="b">${esc(d.prenda)}</span><span>${money(d.precio)}</span></div>
+  <section class="sec"><h3>${ic('reloj')}Fechas</h3>
+    <div class="fechas3">
+      <div><span>Sale</span><b>${fc(a.salida)}</b></div>
+      <div><span>Devuelve</span><b>${fc(a.pactada)}</b></div>
+      ${a.devuelto ? `<div><span>Devolvió</span><b>${fc(a.devuelto)}</b></div>` : `<div><span>Por</span><b>${(n => n === 0 ? 'mismo día' : n + (n === 1 ? ' día' : ' días'))(dias(a.salida, a.pactada))}</b></div>`}
+    </div>
+  </section>
+  <section class="sec"><h3>${ic('dni')}Garantía</h3>
+    <div class="gar">
+      <div class="gar-tx"><b>${esc(a.garantia === 'DNI físico' ? 'DNI físico' : a.garantia || 'Ninguna')}</b>${a.garantiaDevuelta === 'No' ? '<span class="pill p-Reservado">La tienes tú</span>' : a.garantiaDevuelta === 'Sí' ? '<span class="ok-t">Ya se la devolviste ✓</span>' : ''}</div>
+      <div class="gar-ft">${a.fotoGarantia ? verFoto(a.fotoGarantia, 'Ver foto') : a.garantia && a.garantia !== 'Ninguna' && a.estado !== 'Anulado' ? fotoDespues('garantia', a.id, a.garantia === 'DNI físico' ? 'Agregar foto del DNI' : 'Agregar foto del documento') : ''}</div>
+    </div>
+    ${a.garantiaDevuelta === 'No' && a.estado !== 'Reservado' ? `<button class="btn2 sm w" style="margin-top:12px" onclick="dniDevuelto(${q(a.id)})">${ic('dni')} Ya le devolví su ${a.garantia === 'DNI físico' ? 'DNI' : 'documento'}</button>` : ''}
+    ${a.garantiaDevuelta === 'Sí' ? `<button class="link" style="margin-top:6px" onclick="confirmar('¿Todavía tienes su ${a.garantia === 'DNI físico' ? 'DNI' : 'documento'}?', 'Se marcará como que lo tienes tú, por si lo marcaste devuelto por error.', () => dniDevuelto(${q(a.id)}, true))">¿Lo marcaste por error? Deshacer</button>` : ''}
+  </section>
+  <section class="sec"><h3>${ic('vestido')}Prendas <span class="h3n">${ds.length}</span></h3>
+  <div class="lst-pr">${ds.map(d => `<div class="pr-it"><div class="row sp"><span class="b">${esc(d.prenda)}</span><span class="b">${money(d.precio)}</span></div>
     ${descPrenda(d.codigo) ? `<div class="mut">${esc(descPrenda(d.codigo))}</div>` : ''}
     ${d.obsSalida || d.fotoSalida ? `<div class="mut">Salió: ${esc(d.obsSalida || '')} ${verFoto(d.fotoSalida)}</div>` : ''}
-    ${d.estado === 'Devuelta' ? `<div class="mut">Volvió ${fc(d.devueltaEl)}: ${esc(d.obsVuelta || 'bien')}${d.desgaste > 0 ? ' · <span class="er-t">daño ' + money(d.desgaste) + '</span>' : ''} ${verFoto(d.fotoVuelta)}</div>` : (a.estado === 'Entregado' ? '<div class="mut">Todavía la tiene</div>' : '')}</div>`).join('')}</div>
+    ${d.estado === 'Devuelta' ? `<div class="mut">Volvió ${fc(d.devueltaEl)}: ${esc(d.obsVuelta || 'bien')}${d.desgaste > 0 ? ' · <span class="er-t">daño ' + money(d.desgaste) + '</span>' : ''} ${verFoto(d.fotoVuelta)}</div>` : (a.estado === 'Entregado' ? '<div class="pr-est">Todavía la tiene</div>' : '')}</div>`).join('')}</div>
+  </section>
   </div><div>
-  <div class="card">
+  <section class="sec sec-cobro"><h3>${ic('cobrar')}Cobro</h3>
     ${a.mora > 0 || a.desgaste > 0 ? `<div class="tot"><span>Prendas</span><span>${money(a.subtotal)}</span></div>` : ''}
     ${a.mora > 0 ? `<div class="tot"><span>Mora</span><span>${money(a.mora)}</span></div>` : ''}${a.desgaste > 0 ? `<div class="tot"><span>Daños</span><span>${money(a.desgaste)}</span></div>` : ''}
-    <div class="tot b"><span>Total del alquiler</span><span>${money(a.total)}</span></div>
-    <div class="tot"><span>Ya pagó</span><span class="ok-t">${money(a.pagado)}</span></div>
+    <div class="tot"><span>Total del alquiler</span><span class="b">${money(a.total)}</span></div>
+    <div class="tot"><span>Ya pagó</span><span class="ok-t b">${money(a.pagado)}</span></div>
     ${a.estado === 'Anulado' ? `<div class="tot big"><span>Anulado</span><span class="mut">no se cobra</span></div>${a.garantiaDevuelta === 'No' ? '<div class="note">Si te dejó su documento, devuélveselo y márcalo en ⋯ Más.</div>' : ''}`
-      : `<div class="tot big"><span>${a.saldo < -0.009 ? 'Le debes devolver' : a.saldo > 0.009 ? 'Le falta pagar' : 'Pagó todo'}</span><span class="${a.saldo > 0.009 ? 'er-t' : 'ok-t'}">${a.saldo > 0.009 || a.saldo < -0.009 ? money(Math.abs(a.saldo)) : '✓'}</span></div>`}
-    ${ps.length ? `<div class="pagos-t">Pagos</div>` + ps.map(p => `<div class="row sp pago${p.anulado === 'Sí' ? ' anulado' : ''}">
+      : `<div class="tot big saldo ${a.saldo > 0.009 ? 'debe' : 'ok'}"><span>${a.saldo < -0.009 ? 'Le debes devolver' : a.saldo > 0.009 ? 'Le falta pagar' : 'Pagó todo'}</span><span class="${a.saldo > 0.009 ? 'er-t' : 'ok-t'}">${a.saldo > 0.009 || a.saldo < -0.009 ? money(Math.abs(a.saldo)) : '✓'}</span></div>`}
+  </section>
+  ${ps.length ? `<section class="sec"><h3>${ic('lista')}Pagos <span class="h3n">${ps.length}</span></h3>` + ps.map(p => `<div class="row sp pago${p.anulado === 'Sí' ? ' anulado' : ''}">
       <div><div>${esc(String(p.fecha).slice(8, 10) + '/' + String(p.fecha).slice(5, 7))} · ${esc(p.metodo)}${p.anulado === 'Sí' ? ' · <b>anulado</b>' : ''}</div><div class="mut">${esc(p.concepto)}</div></div>
       <div class="row"><span class="b monto">${money(p.monto)}</span>${p.voucher ? verFoto(p.voucher, '') : p.metodo !== 'Efectivo' && p.anulado !== 'Sí' && !/^TPG-/.test(p.id) ? fotoDespues('voucher', p.id, 'Agregar foto del voucher') : ''}${/^TPG-/.test(p.id) ? '<span class="mut" style="font-size:13px">guardando…</span>'
-        : `<button class="btn2 sm" onclick="confirmar(${q(p.anulado === 'Sí' ? '¿Restaurar este pago de ' + money(p.monto) + '?' : '¿Anular este pago de ' + money(p.monto) + '?')},${q(p.anulado === 'Sí' ? 'Vuelve a contar como pagado y el saldo se recalcula.' : 'Úsalo si lo registraste por error: dejará de contar y volverá a figurar lo que debe. Se puede restaurar.')},()=>guardar('anularPago',[${q(p.id)},${p.anulado === 'Sí'}],${q(p.anulado === 'Sí' ? 'Pago restaurado' : 'Pago anulado: el saldo se recalculó')}))">${p.anulado === 'Sí' ? 'Restaurar' : 'Anular'}</button>`}</div></div>`).join('') : ''}
-  </div>
-  ${a.obs ? `<div class="card"><div class="mut">Nota</div><div style="white-space:pre-wrap">${esc(a.obs)}</div></div>` : ''}`;
+        : `<button class="btn2 sm" onclick="confirmar(${q(p.anulado === 'Sí' ? '¿Restaurar este pago de ' + money(p.monto) + '?' : '¿Anular este pago de ' + money(p.monto) + '?')},${q(p.anulado === 'Sí' ? 'Vuelve a contar como pagado y el saldo se recalcula.' : 'Úsalo si lo registraste por error: dejará de contar y volverá a figurar lo que debe. Se puede restaurar.')},()=>guardar('anularPago',[${q(p.id)},${p.anulado === 'Sí'}],${q(p.anulado === 'Sí' ? 'Pago restaurado' : 'Pago anulado: el saldo se recalculó')}))">${p.anulado === 'Sí' ? 'Restaurar' : 'Anular'}</button>`}</div></div>`).join('') + '</section>' : ''}
+  ${a.obs ? `<section class="sec"><h3>${ic('nota')}Nota</h3><div style="white-space:pre-wrap">${esc(a.obs)}</div></section>` : ''}</div></div>`;
 }
 function editorFechas(a) {
   return `<div class="card"><div class="b">Cambiar fechas</div><div class="g2"><div><label class="l">Sale</label><input type="date" id="ef-s" value="${esc(a.salida)}" ${a.estado === 'Entregado' ? 'disabled' : ''}></div><div><label class="l">Devuelve</label><input type="date" id="ef-p" value="${esc(a.pactada)}"></div></div>
